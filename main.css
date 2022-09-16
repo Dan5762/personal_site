@@ -23,7 +23,7 @@
   --altBackgroundColor: #1A1715;
   --backgroundColorHover: #332D29;
   --borderColor: #000;
-  --textColor: #CCB4A5;
+  --textColor: hsl(23, 18%, 82%);
   --altTextColor: #fff;
 }
 
