@@ -23,7 +23,7 @@
   --altBackgroundColor: #1A1715;
   --backgroundColorHover: #332D29;
   --borderColor: #000;
-  --textColor: hsl(23, 18%, 82%);
+  --textColor: #999;
   --altTextColor: #fff;
 }
 
@@ -79,6 +79,10 @@ section {
     max-width: 900px;
     grid-template-columns: 1fr 2fr;
   }
+}
+
+strong {
+  color: var(--altTextColor);
 }
 
 h1 {
