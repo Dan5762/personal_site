@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: url(Satoshi-Regular.woff2) format("woff2"), url(Satoshi-Regular.woff) format("woff");
+  src: url(font/Satoshi-Regular.woff2) format("woff2"), url(font/Satoshi-Regular.woff) format("woff");
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: url(Satoshi-Bold.woff2) format("woff2"), url(Satoshi-Bold.woff) format("woff");
+  src: url(font/Satoshi-Bold.woff2) format("woff2"), url(font/Satoshi-Bold.woff) format("woff");
   font-weight: 700;
   font-style: normal;
   font-stretch: normal;
