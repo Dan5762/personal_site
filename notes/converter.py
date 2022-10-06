@@ -2,14 +2,15 @@
 Code based on 
 """
 
-import cv2
 import re
-import tempfile
-from fpdf import FPDF
-from PIL import Image
 import glob
 import os
+import tempfile
 import sys
+
+import cv2
+from fpdf import FPDF
+from PIL import Image
 from pdf2image import convert_from_path
 
 
