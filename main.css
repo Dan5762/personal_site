@@ -149,8 +149,8 @@ select {
   position: fixed;
   display: flex;
   gap: var(--unit);
-  left: calc(var(--unit) * 6);
-  bottom: calc(var(--unit) * 6);
+  left: var(--unit);
+  top: var(--unit);
 }
 
 .button {
