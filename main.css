@@ -112,6 +112,21 @@ img {
   max-height: 100%;
 }
 
+select {
+  font-family: "Satoshi",sans-serif;
+  font-size: calc(var(--unit) * 2);
+  font-weight: 400;
+  line-height: var(--line-height);
+  line-height: var(--line-height);
+  background-color: var(--backgroundColor);
+  color: var(--textColor);
+  border: var(--unit) solid var(--backgroundColor);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: var(--backgroundColor);
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -130,13 +145,13 @@ img {
   flex-wrap: wrap;
 }
 
-/* .menu-links {
+.menu-links {
   position: fixed;
   display: flex;
   gap: var(--unit);
   left: calc(var(--unit) * 6);
   bottom: calc(var(--unit) * 6);
-} */
+}
 
 .button {
   display: inline-block;

@@ -28,6 +28,12 @@ var tileColorCodes = {
   'white': "#fcfafa",
   'black': "#000000"
 }
+var agents = document.getElementById("agents");
+var agent = agents.value;
+document.getElementById("agents").addEventListener("change", function() {
+  console.log(this.value)
+  agent = this.value;
+});
 
 function initTiles() {
   var tiles = [];
@@ -185,12 +191,12 @@ function findFlips(color, pos) {
       newPos = [pos[0] + direction[0] * steps, pos[1] + direction[1] * steps];
     }
     if (checkOnBoard(newPos) && steps > 1 && tiles[newPos[0]][newPos[1]].color == color) {
-      flipSteps = 0;
-      var flipPos = [pos[0] + direction[0], pos[1] + direction[1]]
+      flipSteps = 1;
+      var flipPos = [pos[0] + direction[0] * flipSteps, pos[1] + direction[1] * flipSteps]
       while (checkOnBoard(flipPos) && tiles[flipPos[0]][flipPos[1]].color == opponentColor) {
+        flipTiles.push(flipPos);
         flipSteps += 1;
         flipPos = [pos[0] + direction[0] * flipSteps, pos[1] + direction[1] * flipSteps];
-        flipTiles.push(flipPos);
       }
     }
   }
@@ -206,6 +212,43 @@ function applyMove(color, pos) {
   for (var flipTile of flipTiles) {
     tile = tiles[flipTile[0]][flipTile[1]];
     tile.color = color;
+  }
+}
+
+function indexOfMax(arr) {
+  if (arr.length === 0) {
+      return -1;
+  }
+
+  var max = arr[0];
+  var maxIndex = 0;
+
+  for (var i = 1; i < arr.length; i++) {
+      if (arr[i] > max) {
+          maxIndex = i;
+          max = arr[i];
+      }
+  }
+
+  return maxIndex;
+}
+
+function sleep(ms) {
+  console.log('sleeping')
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function chooseComputerMove(computerPossibleMoves) {
+  console.log(agent);
+  if (agent == "random") {
+    return computerPossibleMoves[Math.floor(Math.random() * computerPossibleMoves.length)];
+  } else if (agent == "greedy") {
+    nFlips = [];
+    for (var computerPossibleMove of computerPossibleMoves) {
+      flipTiles = findFlips(computerColor, computerPossibleMove)
+      nFlips.push(flipTiles.length);
+    }
+    return computerPossibleMoves[indexOfMax(nFlips)];
   }
 }
 
@@ -228,7 +271,7 @@ function draw() {
     if (validMove && clickTile != null) { // Apply computer move after user move
       computerPossibleMoves = getPossibleMoves(computerColor);
       if (computerPossibleMoves.length > 0) {
-        computerMove = computerPossibleMoves[Math.floor(Math.random() * computerPossibleMoves.length)];
+        computerMove = chooseComputerMove(computerPossibleMoves);
         applyMove(computerColor, computerMove)
         drawMarkers();
       }
@@ -239,7 +282,7 @@ function draw() {
   computerPossibleMoves = getPossibleMoves(computerColor);
   while (userPossibleMoves.length == 0 && winner == null) {
     if (computerPossibleMoves.length > 0) {
-      computerMove = computerPossibleMoves[Math.floor(Math.random() * computerPossibleMoves.length)];
+      computerMove = chooseComputerMove(computerPossibleMoves);
       applyMove(computerColor, computerMove)
       drawMarkers();
 
