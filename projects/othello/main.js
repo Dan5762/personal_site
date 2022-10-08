@@ -341,6 +341,6 @@ function draw() {
       ctx.fillText("Play Again?", (canvas.width / 4) + 62, (canvas.height / 2) + 88);
     }
   }
-
 }
+
 draw();
