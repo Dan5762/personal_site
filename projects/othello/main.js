@@ -217,29 +217,34 @@ function applyMove(color, pos) {
 
 function indexOfMax(arr) {
   if (arr.length === 0) {
-      return -1;
+    return -1;
   }
 
   var max = arr[0];
   var maxIndex = 0;
 
-  for (var i = 1; i < arr.length; i++) {
-      if (arr[i] > max) {
-          maxIndex = i;
-          max = arr[i];
-      }
+  for (var i=1; i<arr.length; i++) {
+    if (arr[i] > max) {
+      maxIndex = i;
+      max = arr[i];
+    }
   }
 
   return maxIndex;
 }
 
-function sleep(ms) {
-  console.log('sleeping')
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+greedyTunedScoreSheet = [
+  [12, -4, 6, 6, 6, 6, -4, 12],
+  [-4, -4, -2,-2, -2, -2, -4, -4],
+  [6, -2, 0, 0, 0, 0, -2, 6],
+  [6, -2, 0, 0, 0, 0, -2, 6],
+  [6, -2, 0, 0, 0, 0, -2, 6],
+  [6, -2, 0, 0, 0, 0, -2, 6],
+  [-4, -4, -2, -2, -2, -2, -4, -4],
+  [12, -4, 6, 6, 6, 6, -4, 12],
+];
 
 function chooseComputerMove(computerPossibleMoves) {
-  console.log(agent);
   if (agent == "random") {
     return computerPossibleMoves[Math.floor(Math.random() * computerPossibleMoves.length)];
   } else if (agent == "greedy") {
@@ -249,6 +254,14 @@ function chooseComputerMove(computerPossibleMoves) {
       nFlips.push(flipTiles.length);
     }
     return computerPossibleMoves[indexOfMax(nFlips)];
+  } else if (agent == "greedy tuned") {
+    tileScores = [];
+    for (var computerPossibleMove of computerPossibleMoves) {
+      flipTiles = findFlips(computerColor, computerPossibleMove)
+      tileScore = flipTiles.length + greedyTunedScoreSheet[computerPossibleMove[0]][computerPossibleMove[1]];
+      tileScores.push(tileScore);
+    }
+    return computerPossibleMoves[indexOfMax(tileScores)];
   }
 }
 
