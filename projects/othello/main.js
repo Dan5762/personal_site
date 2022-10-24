@@ -8,8 +8,8 @@ var tileOffsetTop = 0;
 var tileOffsetLeft = 0;
 var showPossibleMoves = false;
 var clickTile = null;
-var userColor = 'white';
-var computerColor = userColor == 'black' ? 'white' : 'black';
+var userColor = 'w';
+var computerColor = userColor == 'b' ? 'w' : 'b';
 var validMove = true;
 var possibleMoves = [];
 var winner = null;
@@ -23,10 +23,10 @@ var innerBtnWidth = 190;
 var innerBtnHeight = 46;
 var directions = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
 var tileColorCodes = {
-  'green': "#208c48",
-  'yellow': "#e0c826",
-  'white': "#fcfafa",
-  'black': "#000000"
+  'g': "#208c48",
+  'y': "#e0c826",
+  'w': "#fcfafa",
+  'b': "#000000"
 }
 var agents = document.getElementById("agents");
 var agent = agents.value;
@@ -45,15 +45,15 @@ function initTiles() {
         xi: c,
         y: (r * (tileSize + tilePadding)) + tileOffsetLeft,
         yi: r,
-        color: 'green'
+        color: 'g'
       };
     }
   }
 
-  tiles[3][3].color = 'white';
-  tiles[4][4].color = 'white';
-  tiles[3][4].color = 'black';
-  tiles[4][3].color = 'black';
+  tiles[3][3].color = 'w';
+  tiles[4][4].color = 'w';
+  tiles[3][4].color = 'b';
+  tiles[4][3].color = 'b';
 
   return tiles
 }
@@ -65,7 +65,7 @@ document.addEventListener("click", clickHandler, false);
 function clickHandler(e) {
   const rect = canvas.getBoundingClientRect()
   if (e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
-    possibleMoves = getPossibleMoves(userColor);
+    possibleMoves = getPossibleMoves(userColor, tiles);
     clickTile = getClickTile(e);
 
     validMove = JSON.stringify(possibleMoves).indexOf(JSON.stringify(clickTile)) != -1 ? true : false;
@@ -103,7 +103,7 @@ function drawTiles() {
       tile = tiles[c][r];
       ctx.beginPath();
       ctx.rect(tile.x, tile.y, tileSize, tileSize);
-      ctx.fillStyle = tileColorCodes['green'];
+      ctx.fillStyle = tileColorCodes['g'];
       ctx.fill();
       ctx.closePath();
     }
@@ -119,7 +119,7 @@ function drawMarkers() {
 
       ctx.beginPath();
       ctx.arc(tile.x + tileSize * 0.5, tile.y + tileSize * 0.5, radius, 0, Math.PI * 2);
-      color = tile.possibleMove ? 'yellow' : tile.color;
+      color = tile.possibleMove ? 'y' : tile.color;
       ctx.fillStyle = tileColorCodes[color];
       ctx.fill();
       ctx.closePath();
@@ -151,11 +151,11 @@ function checkOnBoard(pos) {
   }
 }
 
-function getPossibleMoves(color) {
-  opponentColor = color == 'black' ? 'white' : 'black';
+function getPossibleMoves(color, board) {
+  opponentColor = color == 'b' ? 'w' : 'b';
 
   var colorTiles = [];
-  tiles.map(row => row.map(tile => {
+  board.map(row => row.map(tile => {
     if (tile.color == color) {
       colorTiles.push(tile)
     }
@@ -166,11 +166,11 @@ function getPossibleMoves(color) {
     for (direction of directions) {
       var steps = 1;
       var newPos = [colorTile.xi + direction[0], colorTile.yi + direction[1]]
-      while (checkOnBoard(newPos) && tiles[newPos[0]][newPos[1]].color == opponentColor) {
+      while (checkOnBoard(newPos) && board[newPos[0]][newPos[1]].color == opponentColor) {
         steps += 1;
         newPos = [colorTile.xi + direction[0] * steps, colorTile.yi + direction[1] * steps];
       }
-      if (checkOnBoard(newPos) && steps > 1 && tiles[newPos[0]][newPos[1]].color == 'green') {
+      if (checkOnBoard(newPos) && steps > 1 && board[newPos[0]][newPos[1]].color == 'g') {
         possibleMoves.push(newPos);
       }
     }
@@ -180,7 +180,7 @@ function getPossibleMoves(color) {
 }
 
 function findFlips(color, pos) {
-  opponentColor = color == 'black' ? 'white' : 'black';
+  opponentColor = color == 'b' ? 'w' : 'b';
 
   var flipTiles = [];
   for (direction of directions) {
@@ -265,6 +265,21 @@ function chooseComputerMove(computerPossibleMoves) {
   }
 }
 
+function negamax(board, depth, alpha, beta, color) {
+  sign = color == computerColor ? 1 : -1;
+  if (depth == 0) {
+    score = 0;
+    board.map(row => row.map(tile => {
+      if (tile.color == computerColor) {
+        score += 1;
+      }
+    }));
+    return sign * score
+  } else {
+    possibleMoves = getPossibleMoves(computerColor, board);
+  }
+}
+
 function draw() {
   if (clickTile == null) { // Initialise Board
     drawTiles();
@@ -282,7 +297,7 @@ function draw() {
     }
   
     if (validMove && clickTile != null) { // Apply computer move after user move
-      computerPossibleMoves = getPossibleMoves(computerColor);
+      computerPossibleMoves = getPossibleMoves(computerColor, tiles);
       if (computerPossibleMoves.length > 0) {
         computerMove = chooseComputerMove(computerPossibleMoves);
         applyMove(computerColor, computerMove)
@@ -291,16 +306,16 @@ function draw() {
     }
   }
 
-  userPossibleMoves = getPossibleMoves(userColor);
-  computerPossibleMoves = getPossibleMoves(computerColor);
+  userPossibleMoves = getPossibleMoves(userColor, tiles);
+  computerPossibleMoves = getPossibleMoves(computerColor, tiles);
   while (userPossibleMoves.length == 0 && winner == null) {
     if (computerPossibleMoves.length > 0) {
       computerMove = chooseComputerMove(computerPossibleMoves);
       applyMove(computerColor, computerMove)
       drawMarkers();
 
-      userPossibleMoves = getPossibleMoves(userColor);
-      computerPossibleMoves = getPossibleMoves(computerColor);
+      userPossibleMoves = getPossibleMoves(userColor, tiles);
+      computerPossibleMoves = getPossibleMoves(computerColor, tiles);
     } else { // End game
       var userScore = 0;
       var computerScore = 0;
@@ -314,7 +329,7 @@ function draw() {
       winner = userScore > computerScore ? 'user' : userScore == computerScore ? 'draw' : 'computer';
 
       resultText = winner == 'user' ? 'You won!' : winner == 'draw' ? 'You drew' : "You lost";
-      whiteScoreText = `White scored ${userScore}`;
+      wScoreText = `White scored ${userScore}`;
       blackScoreText = `Black scored ${computerScore}`;
 
       ctx.clearRect(canvas.width / 4, canvas.height / 4, canvas.width / 2, canvas.height / 2);
