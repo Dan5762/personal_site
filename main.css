@@ -254,3 +254,24 @@ select {
   max-width: 300px;
 }
 /*# sourceMappingURL=main.css.map */
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+  float: left;
+}
+
+.footer--icons {
+  display: flex;
+  align-items: flex-center;
+  justify-content: right;
+}
+
+.footer--icons > a {
+  margin-right: calc(3 * var(--unit));
+  margin-bottom: var(--unit);
+}
