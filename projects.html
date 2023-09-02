@@ -53,12 +53,22 @@
             <option value="random">Random</option>
             <option value="greedy">Greedy</option>
             <option value="greedy tuned" selected>Greedy Tuned</option>
+            <option value="minimax" selected>Minimax</option>
           </select>
           <br/>
           <script src="projects/othello/main.js"></script>
           <p>I've always enjoyed othello, so I figured it would be a great game to apply various ML algorithms to, from a simple greedy search algorithm to training a reinforcement learning (RL) agent.</p>
-          <p>Currently the javascript game above includes a random choice algorithm to play against, as well as two greedy algorithms, one which seeks to maximise the number of flips in a turn, and the other shares this aim, combined with additional bonuses for certain strategic tiles. I am working to include more options to the online version, using agents trained with RL techniques such as Q-Learning.</p>
-          <br/>
+          <p>In the javascript game above you can play against the following four different algorithms of increasing complexity:</p>
+          <h3>Random Choice</h3>
+          <p>As the name suggests this opponent uses random choices to select its move, don't expect any impressive play here.</p>
+          <h3>Greedy</h3>
+          <p>This greedy opponent chooses the move which flips the most tiles. Whilst tempting, this sort of short term thinking also won't lead to very impressive play.</p>
+          <h3>Greedy Tuned</h3>
+          <p>Like the previous greedy opponent this algorithm seeks to maximise the immediate board state. However unlike the previous greedy opponent the immediate board state is combined with additional bonuses for certain strategic tiles. This weights in favour of edges and corners, whilst down weighting tiles adjacent to edges.</p>
+          <h3>Minimax</h3>
+          <p>The minimax is a tree search algorithm that explores all possible sequences, up to some pre-defined depth. The name arises from the definition of the optimal move as the maximised value relative to the players choice and minimised relative to the opponent's actions. The depth here is set to 4, you will notice that even this relatively shallow search becomes very computationally demanding. More efficient searches exist with algorithms such as alpha-beta pruning and principal variation search.</p>
+          <p>I am working to include more options to the online version, using agents trained with RL techniques such as Q-Learning.</p>
+          <p>If you're curious to see how I implemented this game and the opponents you can take a look at the code <a href="https://github.com/Dan5762/personal_site_v2/blob/main/projects/othello/main.js" target="_blank"><strong>here</strong></a>.</p>
           <h1>Cleanplate</h1>
           <div>
             <img src="projects/cleanplate/logo.png"></img>
@@ -70,3 +80,10 @@
     </section>
   </main>
 </body>
+<div class="footer">
+  <div class="footer--icons">
+    <a href="https://github.com/Dan5762" target="_blank" ><img src="images/icons/github.svg" alt="github"></a>
+    <a href="https://www.linkedin.com/in/daniel-long-724b21171/" target="_blank" ><img src="images/icons/linkedin.svg" alt="linkedin"></a>
+    <a href="https://soundcloud.com/daniel-long-602574572" target="_blank" ><img src="images/icons/soundcloud.svg" alt="soundcloud"></a>
+  </div>
+</div>

@@ -1,45 +1,43 @@
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
-var markerRadius = 25;
-var nTiles = 8;
-var tileSize = 58;
-var tilePadding = 2;
-var tileOffsetTop = 0;
-var tileOffsetLeft = 0;
-var showPossibleMoves = false;
-var clickTile = null;
-var userColor = 'w';
-var computerColor = userColor == 'b' ? 'w' : 'b';
-var validMove = true;
-var possibleMoves = [];
-var winner = null;
-var tiles = [];
-var userPossibleMoves = [];
-var computerPossibleMoves = [];
-var textPadding = 20;
-var btnWidth = 200;
-var btnHeight = 56;
-var innerBtnWidth = 190;
-var innerBtnHeight = 46;
-var directions = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
-var tileColorCodes = {
+let canvas = document.getElementById("myCanvas");
+let ctx = canvas.getContext("2d");
+const markerRadius = 25;
+const nTiles = 8;
+const tileSize = 58;
+const tilePadding = 2;
+const tileOffsetTop = 0;
+const tileOffsetLeft = 0;
+let clickTile = null;
+const userColor = 'w';
+const computerColor = userColor == 'b' ? 'w' : 'b';
+let validMove = true;
+let possibleMoves = [];
+let winner = null;
+let tiles = [];
+let userPossibleMoves = [];
+let computerPossibleMoves = [];
+const textPadding = 20;
+const btnWidth = 200;
+const btnHeight = 56;
+const innerBtnWidth = 190;
+const innerBtnHeight = 46;
+const directions = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+const tileColorCodes = {
   'g': "#208c48",
   'y': "#e0c826",
   'w': "#fcfafa",
   'b': "#000000"
 }
-var agents = document.getElementById("agents");
-var agent = agents.value;
+let agents = document.getElementById("agents");
+let agent = agents.value;
 document.getElementById("agents").addEventListener("change", function() {
-  console.log(this.value)
   agent = this.value;
 });
 
 function initTiles() {
-  var tiles = [];
-  for (var c = 0; c < nTiles; c++) {
+  let tiles = [];
+  for (let c = 0; c < nTiles; c++) {
     tiles[c] = [];
-    for (var r = 0; r < nTiles; r++) {
+    for (let r = 0; r < nTiles; r++) {
       tiles[c][r] = {
         x: (c * (tileSize + tilePadding)) + tileOffsetLeft,
         xi: c,
@@ -98,8 +96,8 @@ function getClickTile(e) {
 }
 
 function drawTiles() {
-  for(var c=0; c<nTiles; c++) {
-    for (var r=0; r<nTiles; r++) {
+  for(let c=0; c<nTiles; c++) {
+    for (let r=0; r<nTiles; r++) {
       tile = tiles[c][r];
       ctx.beginPath();
       ctx.rect(tile.x, tile.y, tileSize, tileSize);
@@ -111,8 +109,8 @@ function drawTiles() {
 }
 
 function drawMarkers() {
-  for(var c=0; c<nTiles; c++) {
-    for (var r=0; r<nTiles; r++) {
+  for(let c=0; c<nTiles; c++) {
+    for (let r=0; r<nTiles; r++) {
       tile = tiles[c][r];
       
       radius = tile.possibleMove ? markerRadius * 0.9 : markerRadius; // Prevent leaving outline
@@ -135,8 +133,8 @@ function drawPossibleMoves(possibleMoves) {
 }
 
 function clearPossibleMoves() {
-  for(var c=0; c<nTiles; c++) {
-    for(var r=0; r<nTiles; r++) {
+  for(let c=0; c<nTiles; c++) {
+    for(let r=0; r<nTiles; r++) {
       tile = tiles[c][r];
       tile.possibleMove = false;
     }
@@ -151,11 +149,11 @@ function checkOnBoard(pos) {
   }
 }
 
-function getPossibleMoves(color, board) {
+function getPossibleMoves(color, tiles) {
   opponentColor = color == 'b' ? 'w' : 'b';
 
-  var colorTiles = [];
-  board.map(row => row.map(tile => {
+  let colorTiles = [];
+  tiles.map(row => row.map(tile => {
     if (tile.color == color) {
       colorTiles.push(tile)
     }
@@ -164,13 +162,13 @@ function getPossibleMoves(color, board) {
   possibleMoves = [];
   for (colorTile of colorTiles) {
     for (direction of directions) {
-      var steps = 1;
-      var newPos = [colorTile.xi + direction[0], colorTile.yi + direction[1]]
-      while (checkOnBoard(newPos) && board[newPos[0]][newPos[1]].color == opponentColor) {
+      let steps = 1;
+      let newPos = [colorTile.xi + direction[0], colorTile.yi + direction[1]]
+      while (checkOnBoard(newPos) && tiles[newPos[0]][newPos[1]].color == opponentColor) {
         steps += 1;
         newPos = [colorTile.xi + direction[0] * steps, colorTile.yi + direction[1] * steps];
       }
-      if (checkOnBoard(newPos) && steps > 1 && board[newPos[0]][newPos[1]].color == 'g') {
+      if (checkOnBoard(newPos) && steps > 1 && tiles[newPos[0]][newPos[1]].color == 'g') {
         possibleMoves.push(newPos);
       }
     }
@@ -182,17 +180,17 @@ function getPossibleMoves(color, board) {
 function findFlips(color, pos) {
   opponentColor = color == 'b' ? 'w' : 'b';
 
-  var flipTiles = [];
+  let flipTiles = [];
   for (direction of directions) {
-    var steps = 1;
-    var newPos = [pos[0] + direction[0], pos[1] + direction[1]]
+    let steps = 1;
+    let newPos = [pos[0] + direction[0], pos[1] + direction[1]]
     while (checkOnBoard(newPos) && tiles[newPos[0]][newPos[1]].color == opponentColor) {
       steps += 1;
       newPos = [pos[0] + direction[0] * steps, pos[1] + direction[1] * steps];
     }
     if (checkOnBoard(newPos) && steps > 1 && tiles[newPos[0]][newPos[1]].color == color) {
       flipSteps = 1;
-      var flipPos = [pos[0] + direction[0] * flipSteps, pos[1] + direction[1] * flipSteps]
+      let flipPos = [pos[0] + direction[0] * flipSteps, pos[1] + direction[1] * flipSteps]
       while (checkOnBoard(flipPos) && tiles[flipPos[0]][flipPos[1]].color == opponentColor) {
         flipTiles.push(flipPos);
         flipSteps += 1;
@@ -204,12 +202,16 @@ function findFlips(color, pos) {
   return flipTiles
 }
 
+function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj)); 
+}
+
 function applyMove(color, pos) {
   tile = tiles[pos[0]][pos[1]];
   tile.color = color;
 
   flipTiles = findFlips(color, pos);
-  for (var flipTile of flipTiles) {
+  for (let flipTile of flipTiles) {
     tile = tiles[flipTile[0]][flipTile[1]];
     tile.color = color;
   }
@@ -220,10 +222,10 @@ function indexOfMax(arr) {
     return -1;
   }
 
-  var max = arr[0];
-  var maxIndex = 0;
+  let max = arr[0];
+  let maxIndex = 0;
 
-  for (var i=1; i<arr.length; i++) {
+  for (let i=0; i<arr.length; i++) {
     if (arr[i] > max) {
       maxIndex = i;
       max = arr[i];
@@ -249,35 +251,79 @@ function chooseComputerMove(computerPossibleMoves) {
     return computerPossibleMoves[Math.floor(Math.random() * computerPossibleMoves.length)];
   } else if (agent == "greedy") {
     nFlips = [];
-    for (var computerPossibleMove of computerPossibleMoves) {
+    for (let computerPossibleMove of computerPossibleMoves) {
       flipTiles = findFlips(computerColor, computerPossibleMove)
       nFlips.push(flipTiles.length);
     }
     return computerPossibleMoves[indexOfMax(nFlips)];
   } else if (agent == "greedy tuned") {
     tileScores = [];
-    for (var computerPossibleMove of computerPossibleMoves) {
+    for (let computerPossibleMove of computerPossibleMoves) {
       flipTiles = findFlips(computerColor, computerPossibleMove)
       tileScore = flipTiles.length + greedyTunedScoreSheet[computerPossibleMove[0]][computerPossibleMove[1]];
       tileScores.push(tileScore);
     }
     return computerPossibleMoves[indexOfMax(tileScores)];
+  } else if (agent == "minimax") {
+    const depth = 4; // The depth of the search
+    let bestMoveIdx = 0;
+    let value;
+
+    value, bestMoveIdx = negamax(tiles, computerColor, depth)
+    return computerPossibleMoves[bestMoveIdx];
   }
 }
 
-function negamax(board, depth, alpha, beta, color) {
-  sign = color == computerColor ? 1 : -1;
-  if (depth == 0) {
-    score = 0;
-    board.map(row => row.map(tile => {
-      if (tile.color == computerColor) {
-        score += 1;
-      }
-    }));
-    return sign * score
-  } else {
-    possibleMoves = getPossibleMoves(computerColor, board);
+function negamax(tiles, color, depth) {
+  const oppColor = color == 'b' ? 'w' : 'b';
+  const colorPossibleMoves = getPossibleMoves(color, tiles);
+  const oppColorPossibleMoves = getPossibleMoves(oppColor, tiles);
+
+  // At the final layer return the score up the recursion
+  if (depth == 0 || (colorPossibleMoves.length + oppColorPossibleMoves.length) == 0) {
+    return calculate_scores(tiles, color), 0
   }
+  
+  let value = -1e10
+  let bestMoveIdx = 0
+  let move;
+
+  if (colorPossibleMoves.length > 0) {
+    // Whilst there is moves iterate over them and recurse over each
+    for (let moveIdx = 0; moveIdx < colorPossibleMoves.length; moveIdx++) {
+      move = colorPossibleMoves[moveIdx];
+      let newTiles = deepCopy(tiles);
+      newTiles[move[0]][move[1]] = color;
+      let newValue = -negamax(newTiles, oppColor, depth - 1)[0]
+      if (newValue > value) {
+        bestMoveIdx = moveIdx
+        value = newValue
+      }
+    }
+  } else {
+    // If there are no more moves pass the turn to the other color
+    let newValue = -negamax(tiles, oppColor, depth - 1)[0]
+    if (newValue > value) {
+      value = newValue
+    }
+  }
+
+  return value, bestMoveIdx
+}
+
+function calculate_scores(tiles, color) {
+  oppColor = color == 'b' ? 'w' : 'b';
+  let colorScore = 0;
+  let oppColorScore = 0;
+  tiles.map(row => row.map(tile => {
+    if (tile.color == color) {
+      colorScore += 1;
+    } else if (tile.color == oppColor) {
+      oppColorScore += 1;
+    }
+  }));
+  
+  return colorScore, oppColorScore
 }
 
 function draw() {
@@ -317,19 +363,13 @@ function draw() {
       userPossibleMoves = getPossibleMoves(userColor, tiles);
       computerPossibleMoves = getPossibleMoves(computerColor, tiles);
     } else { // End game
-      var userScore = 0;
-      var computerScore = 0;
-      tiles.map(row => row.map(tile => {
-        if (tile.color == userColor) {
-          userScore += 1;
-        } else if (tile.color == computerColor) {
-          computerScore += 1;
-        }
-      }));
+      let userScore = 0;
+      let computerScore = 0;
+      userScore, computerScore = calculate_scores(tiles, userColor)
       winner = userScore > computerScore ? 'user' : userScore == computerScore ? 'draw' : 'computer';
 
       resultText = winner == 'user' ? 'You won!' : winner == 'draw' ? 'You drew' : "You lost";
-      wScoreText = `White scored ${userScore}`;
+      whiteScoreText = `White scored ${userScore}`;
       blackScoreText = `Black scored ${computerScore}`;
 
       ctx.clearRect(canvas.width / 4, canvas.height / 4, canvas.width / 2, canvas.height / 2);
