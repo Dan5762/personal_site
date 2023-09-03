@@ -268,20 +268,29 @@ function chooseComputerMove(computerPossibleMoves) {
     const depth = 4; // The depth of the search
     let bestMoveIdx = 0;
     let value;
+    const tuned = false;
 
-    value, bestMoveIdx = negamax(tiles, computerColor, depth)
+    value, bestMoveIdx = negamax(tiles, computerColor, depth, tuned)
+    return computerPossibleMoves[bestMoveIdx];
+  } else if (agent == "minimax tuned") {
+    const depth = 4; // The depth of the search
+    let bestMoveIdx = 0;
+    let value;
+    const tuned = true;
+
+    value, bestMoveIdx = negamax(tiles, computerColor, depth, tuned)
     return computerPossibleMoves[bestMoveIdx];
   }
 }
 
-function negamax(tiles, color, depth) {
+function negamax(tiles, color, depth, tuned) {
   const oppColor = color == 'b' ? 'w' : 'b';
   const colorPossibleMoves = getPossibleMoves(color, tiles);
   const oppColorPossibleMoves = getPossibleMoves(oppColor, tiles);
 
   // At the final layer return the score up the recursion
   if (depth == 0 || (colorPossibleMoves.length + oppColorPossibleMoves.length) == 0) {
-    return calculate_scores(tiles, color), 0
+    return calculate_scores(tiles, color, tuned), 0
   }
   
   let value = -1e10
@@ -293,8 +302,8 @@ function negamax(tiles, color, depth) {
     for (let moveIdx = 0; moveIdx < colorPossibleMoves.length; moveIdx++) {
       move = colorPossibleMoves[moveIdx];
       let newTiles = deepCopy(tiles);
-      newTiles[move[0]][move[1]] = color;
-      let newValue = -negamax(newTiles, oppColor, depth - 1)[0]
+      newTiles[move[0]][move[1]].color = color;
+      let newValue = -negamax(newTiles, oppColor, depth - 1, tuned)[0]
       if (newValue > value) {
         bestMoveIdx = moveIdx
         value = newValue
@@ -302,7 +311,7 @@ function negamax(tiles, color, depth) {
     }
   } else {
     // If there are no more moves pass the turn to the other color
-    let newValue = -negamax(tiles, oppColor, depth - 1)[0]
+    let newValue = -negamax(tiles, oppColor, depth - 1, tuned)[0]
     if (newValue > value) {
       value = newValue
     }
@@ -311,18 +320,26 @@ function negamax(tiles, color, depth) {
   return value, bestMoveIdx
 }
 
-function calculate_scores(tiles, color) {
+function calculate_scores(tiles, color, tuned) {
   oppColor = color == 'b' ? 'w' : 'b';
   let colorScore = 0;
   let oppColorScore = 0;
-  tiles.map(row => row.map(tile => {
-    if (tile.color == color) {
-      colorScore += 1;
-    } else if (tile.color == oppColor) {
-      oppColorScore += 1;
+  for (var i = 0; i < nTiles; i++) {
+    for (var j = 0; j < nTiles; j++) {
+      if (tiles[i][j].color == color) {
+        colorScore += 1;
+        if (tuned) {
+          colorScore += greedyTunedScoreSheet[i][j];
+        }
+      } else if (tiles[i][j].color == oppColor) {
+        oppColorScore += 1;
+        if (tuned) {
+          oppColorScore += greedyTunedScoreSheet[i][j];
+        }
+      }
     }
-  }));
-  
+  }
+
   return colorScore, oppColorScore
 }
 
@@ -365,7 +382,7 @@ function draw() {
     } else { // End game
       let userScore = 0;
       let computerScore = 0;
-      userScore, computerScore = calculate_scores(tiles, userColor)
+      userScore, computerScore = calculate_scores(tiles, userColor, false)
       winner = userScore > computerScore ? 'user' : userScore == computerScore ? 'draw' : 'computer';
 
       resultText = winner == 'user' ? 'You won!' : winner == 'draw' ? 'You drew' : "You lost";

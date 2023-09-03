@@ -54,6 +54,7 @@
             <option value="greedy">Greedy</option>
             <option value="greedy tuned" selected>Greedy Tuned</option>
             <option value="minimax" selected>Minimax</option>
+            <option value="minimax tuned" selected>Minimax Tuned</option>
           </select>
           <br/>
           <script src="projects/othello/main.js"></script>
@@ -67,6 +68,8 @@
           <p>Like the previous greedy opponent this algorithm seeks to maximise the immediate board state. However unlike the previous greedy opponent the immediate board state is combined with additional bonuses for certain strategic tiles. This weights in favour of edges and corners, whilst down weighting tiles adjacent to edges.</p>
           <h3>Minimax</h3>
           <p>The minimax is a tree search algorithm that explores all possible sequences, up to some pre-defined depth. The name arises from the definition of the optimal move as the maximised value relative to the players choice and minimised relative to the opponent's actions. The depth here is set to 4, you will notice that even this relatively shallow search becomes very computationally demanding. More efficient searches exist with algorithms such as alpha-beta pruning and principal variation search.</p>
+          <h3>Minimax Tuned</h3>
+          <p>Like the previous minimax opponent this opponent uses the minimax algorithm to search for the optimal move. However unlike the previous minimax opponent the board value is not just the number of tiles owned, but also weighted by the tile values.</p>
           <p>I am working to include more options to the online version, using agents trained with RL techniques such as Q-Learning.</p>
           <p>If you're curious to see how I implemented this game and the opponents you can take a look at the code <a href="https://github.com/Dan5762/personal_site_v2/blob/main/projects/othello/main.js" target="_blank"><strong>here</strong></a>.</p>
           <h1>Cleanplate</h1>
