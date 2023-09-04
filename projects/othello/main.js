@@ -299,7 +299,7 @@ function negamax(inputTiles, color, depth, tuned) {
 
   // At the final layer return the score up the recursion
   if (depth == 0 || (colorPossibleMoves.length + oppColorPossibleMoves.length) == 0) {
-    return [calculate_scores(board, color, tuned), 0]
+    return [calculate_scores(board, color, tuned)[0], 0]
   }
   
   let value = -100
@@ -349,7 +349,7 @@ function calculate_scores(board, color, tuned) {
     }
   }
 
-  return colorScore - oppColorScore
+  return [colorScore - oppColorScore, colorScore, oppColorScore]
 }
 
 function draw() {
@@ -390,9 +390,10 @@ function draw() {
       userPossibleMoves = getPossibleMoves(userColor, tiles);
       computerPossibleMoves = getPossibleMoves(computerColor, tiles);
     } else { // End game
+      let relScore = 0;
       let userScore = 0;
       let computerScore = 0;
-      userScore, computerScore = calculate_scores(tiles, userColor, false)
+      [relScore, userScore, computerScore] = calculate_scores(tiles, userColor, false)
       winner = userScore > computerScore ? 'user' : userScore == computerScore ? 'draw' : 'computer';
 
       resultText = winner == 'user' ? 'You won!' : winner == 'draw' ? 'You drew' : "You lost";
