@@ -48,6 +48,7 @@ body {
   padding: 0 48px;
   max-width: 1320px;
   margin: 0 auto;
+  font-display: swap;
 }
 
 @media screen and (max-width: 800px) {
