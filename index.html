@@ -35,19 +35,32 @@
 </head>
 
 <body>
-  <div class="menu-links">
-    <a href="index.html" class="button">
-      <h2>About</h2>
-    </a>
-    <a href="projects.html" class="button">
-      <h2>Projects</h2>
-    </a>
-    <a href="reading.html" class="button">
-      <h2>Reading</h2>
-    </a>
-    <a href="gallery.html" class="button">
-      <h2>Gallery</h2>
-    </a>
+  <div class="menu">
+    <script>
+      function toggleMenu() {
+        const menuLinks = document.querySelector('.menu-links');
+        menuLinks.classList.toggle('active');
+      }
+    </script>
+    <div class="burger-icon" onclick="toggleMenu()">&#9776;</div>
+
+    <div class="menu-links">
+      <a href="index.html" class="button">
+        <h2>About</h2>
+      </a>
+      <a href="projects.html" class="button">
+        <h2>Projects</h2>
+      </a>
+      <a href="reading.html" class="button">
+        <h2>Reading</h2>
+      </a>
+      <a href="writing.html" class="button">
+        <h2>Writing</h2>
+      </a>
+      <a href="gallery.html" class="button">
+        <h2>Gallery</h2>
+      </a>
+    </div>
   </div>
   <main>
     <section>
@@ -60,7 +73,6 @@
       </div>
       <div class="content">
         <div>
-          <p>Physics graduate with both masters and bachelors degrees.</p>
           <p>My academic background is in quantum physics, with research experience in simulating superconducting qubits and developing neuromorphic systems.</p>
           <p>In addition to this experience I have co-founded a legal AI startup and also previously worked as a data scientist, on both biomedical and financial applications.</p>
           <p>I have a deep interest in understanding how intelligence emerges within the brain and how artificial systems can adopt such principles and architectures.</p>

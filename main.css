@@ -181,13 +181,38 @@ select {
   flex-wrap: wrap;
 }
 
-.menu-links {
+.menu {
+  position: fixed;
+  left: var(--unit);
+  top: var(--unit);
+  width: 100%; /* Ensures menu spans across the screen */
+  display: flex;
+  justify-content: flex-end; /* Align items to the right */
+  align-items: center; /* Vertically center the items */
+  padding: 0 calc(var(--unit) * 2);
+}
+
+/* .menu-links {
   position: fixed;
   display: flex;
   gap: var(--unit);
   left: var(--unit);
   top: var(--unit);
   height: 42px;
+} */
+
+.menu-links {
+  display: flex;
+  gap: var(--unit);
+  height: calc(var(--unit) * 5);
+  margin-right: calc(var(--unit) * 2); /* Add margin from right edge */
+}
+
+.burger-icon {
+  display: none; /* Hidden by default */
+  cursor: pointer;
+  font-size: calc(var(--unit) * 2); /* Set the size of the burger icon */
+  margin-left: auto; /* Align the burger icon to the right */
 }
 
 .button {
@@ -212,6 +237,31 @@ select {
   font-size: calc(var(--unit) * 1.5);
   font-weight: 400;
   color: var(--textColor);
+}
+
+/* Responsive styling */
+@media screen and (max-width: 550px) {
+  .menu-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: calc(var(--unit) * 8);
+    right: var(--unit);
+    width: auto;
+    z-index: 10;
+    gap: var(--unit);
+  }
+
+  .menu-links.active {
+    display: flex;
+  }
+
+  .burger-icon {
+    display: block;
+    font-size: calc(var(--unit) * 5);
+    margin-right: var(--unit);
+    color: var(--altTextColor);
+  }
 }
 
 .profile-photo {
@@ -265,8 +315,8 @@ select {
 
 .thumbnail {
   background-color: var(--secondaryBorderColor);
-  width: calc(12 * var(--unit));
-  height: calc(12 * var(--unit));
+  width: calc(10 * var(--unit));
+  height: calc(10 * var(--unit));
   /* padding-top: 75%; */
   border-radius: 16px;
   /* -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 4px rgba(0, 0, 0, 0.1);
@@ -275,6 +325,7 @@ select {
   transition: all 0.2s ease-out 0s; */
   position: relative;
   overflow: hidden;
+  margin-right: auto;
   margin-bottom: var(--unit);
 }
 

@@ -26,27 +26,54 @@
 </head>
 
 <body>
-  <div class="menu-links">
-    <a href="index.html" class="button">
-      <h2>About</h2>
-    </a>
-    <a href="projects.html" class="button">
-      <h2>Projects</h2>
-    </a>
-    <a href="reading.html" class="button">
-      <h2>Reading</h2>
-    </a>
-    <a href="gallery.html" class="button">
-      <h2>Gallery</h2>
-    </a>
+  <div class="menu">
+    <script>
+      function toggleMenu() {
+        const menuLinks = document.querySelector('.menu-links');
+        menuLinks.classList.toggle('active');
+      }
+    </script>
+    <div class="burger-icon" onclick="toggleMenu()">&#9776;</div>
+
+    <div class="menu-links">
+      <a href="index.html" class="button">
+        <h2>About</h2>
+      </a>
+      <a href="projects.html" class="button">
+        <h2>Projects</h2>
+      </a>
+      <a href="reading.html" class="button">
+        <h2>Reading</h2>
+      </a>
+      <a href="writing.html" class="button">
+        <h2>Writing</h2>
+      </a>
+      <a href="gallery.html" class="button">
+        <h2>Gallery</h2>
+      </a>
+    </div>
   </div>
   <main>
     <section>
       <div class="">
-        <h1><a href="https://snnbenchmarks.com">SNN Benchmarks</a></h1>
+        <h1><a href="https://snnbenchmarks.com" target="_blank">SNN Benchmarks</a></h1>
       </div>
       <div class="content">
-        <p>I put this <a href="https://snnbenchmarks.com"><strong>site</strong></a> together for tracking Spiking Neural Network (SNN) Benchmarks using results from leading research papers. This initiative is maintained by myself and was conceived from finding a lack of such a comparison tool whilst I explored the field.</p>
+        <div>
+          <img src="projects/snnbench/screenshot.png" alt="SNN Benchmarks Screenshot" style="max-width: 100%; height: auto;">
+        </div>
+        <p>I put this <a href="https://snnbenchmarks.com" target="_blank"><strong>site</strong></a> together for tracking Spiking Neural Network (SNN) Benchmarks using results from leading research papers. This initiative is maintained by myself and was conceived from finding a lack of such a comparison tool whilst I explored the field.</p>
+      </div>
+    </section>
+    <section>
+      <div class="">
+        <h1><a href="https://github.com/Dan5762/ask-app" target="_blank">Ask LLMs</a></h1>
+      </div>
+      <div class="content">
+        <div>
+          <img src="projects/ask/demo.gif" alt="Ask LLMs Demo" style="max-width: 100%; height: auto;">
+        </div>
+        <p><a href="https://github.com/Dan5762/ask-app" target="_blank"><strong>Ask LLMs</strong></a> was a small project I started to explore a forum style interface for asking questions to a large language model. The thinking was that often when trying to find the answer to a specific question I find forums the most useful. This is because I can skim read the answers and quickly find the one which answers the aspect of the question which I am most interested in. The typical LLM interface is a single multi-paragraph answer, meaning that the question needs to be well composed to get the answer you are looking for. This project is a minimal implementation of this interface. It can be run locally following the instructions in the <a href="https://github.com/Dan5762/ask-app?tab=readme-ov-file#local-setup" target="_blank"><strong>repository</strong></a>. If anyone has any thoughts on how to improve this project I would love to hear them, also feel free to fork it and develop the idea further!</p>
       </div>
     </section>
     <section>
