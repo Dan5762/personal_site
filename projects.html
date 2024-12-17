@@ -53,13 +53,24 @@
   <main>
     <section>
       <div class="">
+        <h1><a href="https://github.com/Dan5762/character-language-models/tree/main/markov-chains" target="_blank">Character Markov Chain</a></h1>
+      </div>
+      <div class="content">
+        <div>
+          <img src="projects/character-language-models/markov_visualization.png" alt="Markov Chain Visualisation" style="max-width: 100%; height: auto;">
+        </div>
+        <p>This character level Markov chain generates text in the style of "The Picture of Dorian Gray" by Oscar Wilde. The model is trained by calculating the transition probabilities seen within the text and then is used to generate new text by randomly sampling the next character based on the transition probabilities from the previous character sequence. You can check out the code for this project <a href="https://github.com/Dan5762/character-language-models/tree/main/markov-chains" target="_blank">here</a>.</p>
+      </div>
+    </section>
+    <section>
+      <div class="">
         <h1><a href="https://github.com/Dan5762/ticket-to-ride" target="_blank">Ticket to Ride AI</a></h1>
       </div>
       <div class="content">
         <div>
           <img src="projects/ticket-to-ride-ai/game_replay.gif" alt="Ticket to Ride AI Animation" style="max-width: 100%; height: auto;">
         </div>
-        <p>I put together this ticket to ride simulation to explore the game and develop an AI to play it. The game is played by selecting routes between cities and collecting the corresponding coloured train cards to claim the route. The game is won by having the most points at the end of the game. You can check out the code for simulating the game <a href="https://github.com/Dan5762/ticket-to-ride" target="_blank">here</a></p>
+        <p>I put together this <a href="https://en.wikipedia.org/wiki/Ticket_to_Ride_(board_game)" target="_blank">ticket to ride</a> simulation to explore the game and develop an AI to play it. The game is played by selecting routes between cities and collecting the corresponding coloured train cards to claim the route. The game is won by having the most points at the end of the game. You can check out the code for simulating the game <a href="https://github.com/Dan5762/ticket-to-ride" target="_blank">here</a>.</p>
       </div>
     </section>
     <section>
@@ -70,7 +81,7 @@
         <div>
           <img src="projects/snnbench/screenshot.png" alt="SNN Benchmarks Screenshot" style="max-width: 100%; height: auto;">
         </div>
-        <p>I put this <a href="https://snnbenchmarks.com" target="_blank">site</a> together for tracking Spiking Neural Network (SNN) Benchmarks using results from leading research papers. This initiative is maintained by myself and was conceived from finding a lack of such a comparison tool whilst I explored the field.</p>
+        <p>I made this <a href="https://snnbenchmarks.com" target="_blank">site</a> to track Spiking Neural Network (SNN) Benchmarks using results from leading research papers. This project is maintained by myself and was conceived of from finding a lack of such a comparison tool whilst I explored this field.</p>
       </div>
     </section>
     <section>
@@ -90,10 +101,19 @@
       </div>
       <div class="content">
         <div>
+          <h3>Introduction</h3>
+          <p>I've always enjoyed othello, so I figured it would be a great game to apply various ML algorithms to, from a simple greedy search algorithm to training a reinforcement learning (RL) agent.</p>
+          
+          <h3>Othello Rules</h3>
+          <p>The game starts with four discs placed in the center of the board in a square pattern. Each player takes turns placing a disc of their color on the board. A move is valid if it captures at least one of the opponent's discs. Capturing is done by trapping one or more of the opponent's discs between the disc just placed and another disc of the current player's color. The captured discs are then flipped to the current player's color. The game ends when neither player can make a valid move. The player with the most discs of their color on the board at the end of the game wins.</p>
+          
+          <h3>Play the game</h3>
+          <p>In the javascript game below you can play against the following five different algorithms of increasing complexity</p>
+          
           <canvas id="myCanvas" width="480" height="480"></canvas>
           <br/>
           <label>Choose an opponent: </label>
-          <select name="agents" id="agents">
+          <select name="agents" id="agents" class="select-othello-opponent" >
             <option value="random">Random</option>
             <option value="greedy">Greedy</option>
             <option value="greedy tuned" selected>Greedy Tuned</option>
@@ -102,8 +122,7 @@
           </select>
           <br/>
           <script src="projects/othello/main.js"></script>
-          <p>I've always enjoyed othello, so I figured it would be a great game to apply various ML algorithms to, from a simple greedy search algorithm to training a reinforcement learning (RL) agent.</p>
-          <p>In the javascript game above you can play against the following five different algorithms of increasing complexity:</p>
+
           <h3>Random Choice</h3>
           <p>As the name suggests this opponent uses random choices to select its move, don't expect any impressive play here.</p>
           <h3>Greedy</h3>
@@ -115,6 +134,8 @@
           <h3>Minimax Tuned</h3>
           <p>Like the previous minimax opponent this opponent uses the minimax algorithm to search for the optimal move. However unlike the previous minimax opponent the board value is not just the number of tiles owned, but also weighted by the tile values.</p>
           <p>I am working to include more options to the online version, using agents trained with RL techniques such as Q-Learning.</p>
+
+          <h3>Implementation</h3>
           <p>If you're curious to see how I implemented this game and the opponents you can take a look at the code <a href="https://github.com/Dan5762/personal_site_v2/blob/main/projects/othello/main.js" target="_blank">here</a>.</p>
         </div>
       </div>
@@ -125,10 +146,15 @@
       </div>
       <div class="content">
         <p>At cleanplate I was building our mobile app, which aimed to enable food influencers to share the carbon impact of the food they promote. Check out the <a href="https://apps.apple.com/tj/app/cleanplate/id1573742155?platform=iphone" target="_blank">app store page</a> for more details. We decided to stop working on this project due to a lack of time for it between me and my friends Tom and Rory.</p>
-        <br/>
+      </div>
+    </section>
+    <section>
+      <div class=""></div>
+      <div class="content">
         <h3>More coming soon...</h3>
       </div>
     </section>
+    
   </main>
 </body>
 <div class="footer">

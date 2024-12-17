@@ -364,3 +364,7 @@ select {
   margin-right: calc(3 * var(--unit));
   margin-bottom: var(--unit);
 }
+
+.select-othello-opponent {
+  font-weight: 700;
+}
