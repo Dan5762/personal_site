@@ -2,12 +2,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Configuration options
   const config = {
-    size: 50,                   // Initial size of the inverter circle in pixels
+    size: 40,                   // Initial size of the inverter circle in pixels
     transitionSpeed: 0.2,       // Transition speed in seconds for size changes
     trailEffect: false,         // Whether to enable trail effect
-    minSize: 0,                 // Minimum random size on click (0 for complete disappearance)
-    maxSize: 50,                // Maximum random size on click
-    randomSizeOnClick: true     // Enable random size changes on click
   };
 
   // Create the cursor follower element
@@ -26,18 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update the cursor follower position
     cursorFollower.style.left = e.clientX + 'px';
     cursorFollower.style.top = e.clientY + 'px';
-  });
-
-  // Set random size on click
-  document.addEventListener('click', function() {
-    if (config.randomSizeOnClick) {
-      // Generate a random size between minSize and maxSize
-      const randomSize = Math.floor(Math.random() * (config.maxSize - config.minSize + 1)) + config.minSize;
-      
-      // Apply the new size with transition
-      cursorFollower.style.width = `${randomSize}px`;
-      cursorFollower.style.height = `${randomSize}px`;
-    }
   });
 
   // Hide cursor when leaving the window
