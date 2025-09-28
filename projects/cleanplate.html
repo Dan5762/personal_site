@@ -24,32 +24,12 @@
 
   <link rel="stylesheet" href="../main.css">
   <script src="../assets/js/cursor-effect.js"></script>
+  <script src="../assets/js/menu.js"></script>
 </head>
 
 <body>
-  <div class="menu">
-    <script>
-      function toggleMenu() {
-        const menuLinks = document.querySelector('.menu-links');
-        menuLinks.classList.toggle('active');
-      }
-    </script>
-    <div class="burger-icon" onclick="toggleMenu()">&#9776;</div>
-
-    <div class="menu-links">
-      <a href="../index.html" class="button">
-        <h2>About</h2>
-      </a>
-      <a href="../projects.html" class="button">
-        <h2>Projects</h2>
-      </a>
-      <a href="../reading.html" class="button">
-        <h2>Reading</h2>
-      </a>
-      <a href="../gallery.html" class="button">
-        <h2>Gallery</h2>
-      </a>
-    </div>
+  <div class="menu" id="menu-container">
+    <!-- Menu will be loaded by JavaScript -->
   </div>
   <main>
     <section>

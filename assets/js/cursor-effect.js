@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Configuration options
   const config = {
-    size: 40,                   // Initial size of the inverter circle in pixels
+    size: 30,                   // Initial size of the inverter circle in pixels
     transitionSpeed: 0.2,       // Transition speed in seconds for size changes
     trailEffect: false,         // Whether to enable trail effect
   };
@@ -17,10 +17,16 @@ document.addEventListener('DOMContentLoaded', function() {
   cursorFollower.style.height = `${config.size}px`;
   cursorFollower.style.transform = "translate(-50%, -50%)";
   cursorFollower.style.transition = `width ${config.transitionSpeed}s ease-out, height ${config.transitionSpeed}s ease-out`;
+  
+  // Initially hide cursor until mouse moves
+  cursorFollower.style.left = '-100px';
+  cursorFollower.style.top = '-100px';
+  cursorFollower.style.opacity = '0';
 
   // Track mouse position
   document.addEventListener('mousemove', function(e) {
-    // Update the cursor follower position
+    // Show cursor and update position
+    cursorFollower.style.opacity = '1';
     cursorFollower.style.left = e.clientX + 'px';
     cursorFollower.style.top = e.clientY + 'px';
   });
