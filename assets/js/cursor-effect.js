@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     size: 30,                   // Initial size of the inverter circle in pixels
     transitionSpeed: 0.2,       // Transition speed in seconds for size changes
     trailEffect: false,         // Whether to enable trail effect
+    bubbleSpeed: 2000,          // Speed of bubbling animation in milliseconds
+    bubbleVariation: 0.3,       // How much the size varies (0.3 = 30%)
   };
 
   // Create the cursor follower element
@@ -40,6 +42,37 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('mouseenter', function() {
     cursorFollower.style.opacity = '1';
   });
+
+  // Lava lamp droplet animation
+  let animationStartTime = Date.now();
+  function animateDroplet() {
+    const elapsed = Date.now() - animationStartTime;
+    const progress = (elapsed % config.bubbleSpeed) / config.bubbleSpeed;
+    
+    // Create multiple offset sine waves for organic shape deformation
+    // Use wave frequencies that create smooth loops (whole number ratios)
+    const wave1 = Math.sin(progress * Math.PI * 2);
+    const wave2 = Math.sin(progress * Math.PI * 4 + Math.PI / 4);
+    const wave3 = Math.cos(progress * Math.PI * 6 + Math.PI / 3);
+    const wave4 = Math.sin(progress * Math.PI * 8 + Math.PI / 2);
+    
+    // Calculate dynamic border radius values for organic shape
+    const baseRadius = 50;
+    const variation = config.bubbleVariation * 20; // Scale for border-radius
+    
+    const topLeft = baseRadius + (wave1 * variation);
+    const topRight = baseRadius + (wave2 * variation);
+    const bottomRight = baseRadius + (wave3 * variation);
+    const bottomLeft = baseRadius + (wave4 * variation);
+    
+    // Apply organic border radius to create droplet effect
+    cursorFollower.style.borderRadius = `${topLeft}% ${topRight}% ${bottomRight}% ${bottomLeft}%`;
+    
+    requestAnimationFrame(animateDroplet);
+  }
+  
+  // Start the droplet animation
+  animateDroplet();
   
   // Add keyboard control to toggle the cursor effect
   document.addEventListener('keydown', function(e) {
@@ -54,25 +87,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Reset to default size with 'r' key
     if (e.key.toLowerCase() === 'r') {
-      cursorFollower.style.width = `${config.size}px`;
-      cursorFollower.style.height = `${config.size}px`;
+      config.size = 30;
     }
     
     // Make inverter larger with '+' key
     if (e.key === '+' || e.key === '=') {
-      const currentSize = parseInt(cursorFollower.style.width);
-      const newSize = currentSize + 10;
-      cursorFollower.style.width = `${newSize}px`;
-      cursorFollower.style.height = `${newSize}px`;
+      config.size += 10;
     }
     
     // Make inverter smaller with '-' key
     if (e.key === '-' || e.key === '_') {
-      const currentSize = parseInt(cursorFollower.style.width);
-      if (currentSize > 20) {
-        const newSize = currentSize - 10;
-        cursorFollower.style.width = `${newSize}px`;
-        cursorFollower.style.height = `${newSize}px`;
+      if (config.size > 20) {
+        config.size -= 10;
       }
     }
   });
