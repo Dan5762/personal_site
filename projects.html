@@ -1,167 +1,173 @@
 <!-- Made by Alan Long (https://alanlong.design/) & Daniel Long (INSERT_URL) 2022 s-->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>daniellong.co</title>
-  <meta name="description" content="I'm a quantum research scientist looking for positions in the interface between the theory and physical realisation of superconducting qubits.">
-  <meta name="author" content="Daniel Long">
+		<title>daniellong.co</title>
+		<meta
+			name="description"
+			content="I'm a quantum research scientist looking for positions in the interface between the theory and physical realisation of superconducting qubits."
+		/>
+		<meta name="author" content="Daniel Long" />
 
-  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#1A1715">
-  <meta name="msapplication-TileColor" content="#1A1715">
-  <meta name="theme-color" content="#1A1715">
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="assets/images/apple-touch-icon.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="assets/images/favicon-32x32.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="assets/images/favicon-16x16.png"
+		/>
+		<link rel="manifest" href="/site.webmanifest" />
+		<link
+			rel="mask-icon"
+			href="assets/images/safari-pinned-tab.svg"
+			color="#1A1715"
+		/>
+		<meta name="msapplication-TileColor" content="#1A1715" />
+		<meta name="theme-color" content="#1A1715" />
 
-  <meta property="og:title" content="Daniel Long">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://daniellong.co">
-  <meta property="og:description" content="I'm a quantum research scientist looking for positions in the interface between the theory and physical realisation of superconducting qubits.">
+		<meta property="og:title" content="Daniel Long" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://daniellong.co" />
+		<meta
+			property="og:description"
+			content="I'm a quantum research scientist looking for positions in the interface between the theory and physical realisation of superconducting qubits."
+		/>
 
-  <link rel="stylesheet" href="main.css">
-  <script src="cursor-effect.js"></script>
-</head>
+		<link rel="stylesheet" href="main.css" />
+		<script src="assets/js/cursor-effect.js"></script>
+	</head>
 
-<body>
-  <div class="menu">
-    <script>
-      function toggleMenu() {
-        const menuLinks = document.querySelector('.menu-links');
-        menuLinks.classList.toggle('active');
-      }
-    </script>
-    <div class="burger-icon" onclick="toggleMenu()">&#9776;</div>
+	<body>
+		<div class="menu">
+			<script>
+				function toggleMenu() {
+					const menuLinks = document.querySelector(".menu-links");
+					menuLinks.classList.toggle("active");
+				}
+			</script>
+			<div class="burger-icon" onclick="toggleMenu()">&#9776;</div>
 
-    <div class="menu-links">
-      <a href="index.html" class="button">
-        <h2>About</h2>
-      </a>
-      <a href="projects.html" class="button">
-        <h2>Projects</h2>
-      </a>
-      <a href="reading.html" class="button">
-        <h2>Reading</h2>
-      </a>
-      <a href="gallery.html" class="button">
-        <h2>Gallery</h2>
-      </a>
-    </div>
-  </div>
-  <main>
-    <section>
-      <div class="">
-        <h1><a href="https://github.com/Dan5762/character-language-models/tree/main/markov-chains" target="_blank">Character Markov Chain</a></h1>
-      </div>
-      <div class="content">
-        <div>
-          <img src="projects/character-language-models/markov_visualization.png" alt="Markov Chain Visualisation" style="max-width: 100%; height: auto;">
-        </div>
-        <p>This character level Markov chain generates text in the style of "The Picture of Dorian Gray" by Oscar Wilde. The model is trained by calculating the transition probabilities seen within the text and then is used to generate new text by randomly sampling the next character based on the transition probabilities from the previous character sequence. You can check out the code for this project <a href="https://github.com/Dan5762/character-language-models/tree/main/markov-chains" target="_blank">here</a>.</p>
-      </div>
-    </section>
-    <section>
-      <div class="">
-        <h1><a href="https://github.com/Dan5762/ticket-to-ride" target="_blank">Ticket to Ride AI</a></h1>
-      </div>
-      <div class="content">
-        <div>
-          <img src="projects/ticket-to-ride-ai/game_replay.gif" alt="Ticket to Ride AI Animation" style="max-width: 100%; height: auto;">
-        </div>
-        <p>I put together this <a href="https://en.wikipedia.org/wiki/Ticket_to_Ride_(board_game)" target="_blank">ticket to ride</a> simulation to explore the game and develop an AI to play it. The game is played by selecting routes between cities and collecting the corresponding coloured train cards to claim the route. The game is won by having the most points at the end of the game. You can check out the code for simulating the game <a href="https://github.com/Dan5762/ticket-to-ride" target="_blank">here</a>.</p>
-      </div>
-    </section>
-    <section>
-      <div class="">
-        <h1><a href="https://snnbenchmarks.com" target="_blank">SNN Benchmarks</a></h1>
-      </div>
-      <div class="content">
-        <div>
-          <img src="projects/snnbench/screenshot.png" alt="SNN Benchmarks Screenshot" style="max-width: 100%; height: auto;">
-        </div>
-        <p>I made this <a href="https://snnbenchmarks.com" target="_blank">site</a> to track Spiking Neural Network (SNN) Benchmarks using results from leading research papers. This project is maintained by myself and was conceived of from finding a lack of such a comparison tool whilst I explored this field.</p>
-      </div>
-    </section>
-    <section>
-      <div class="">
-        <h1><a href="https://github.com/Dan5762/ask-app" target="_blank">Ask LLMs</a></h1>
-      </div>
-      <div class="content">
-        <div>
-          <img src="projects/ask/demo.gif" alt="Ask LLMs Demo" style="max-width: 100%; height: auto;">
-        </div>
-        <p><a href="https://github.com/Dan5762/ask-app" target="_blank">Ask LLMs</a> was a small project I started to explore a forum style interface for asking questions to a large language model. The thinking was that often when trying to find the answer to a specific question I find forums the most useful. This is because I can skim read the answers and quickly find the one which answers the aspect of the question which I am most interested in. The typical LLM interface is a single multi-paragraph answer, meaning that the question needs to be well composed to get the answer you are looking for. This project is a minimal implementation of this interface. It can be run locally following the instructions in the <a href="https://github.com/Dan5762/ask-app?tab=readme-ov-file#local-setup" target="_blank">repository</a>. If anyone has any thoughts on how to improve this project I would love to hear them, also feel free to fork it and develop the idea further!</p>
-      </div>
-    </section>
-    <section>
-      <div class="">
-        <h1>Othello Bot</h1>
-      </div>
-      <div class="content">
-        <div>
-          <h3>Introduction</h3>
-          <p>I've always enjoyed othello, so I figured it would be a great game to apply various ML algorithms to, from a simple greedy search algorithm to training a reinforcement learning (RL) agent.</p>
-          
-          <h3>Othello Rules</h3>
-          <p>The game starts with four discs placed in the center of the board in a square pattern. Each player takes turns placing a disc of their color on the board. A move is valid if it captures at least one of the opponent's discs. Capturing is done by trapping one or more of the opponent's discs between the disc just placed and another disc of the current player's color. The captured discs are then flipped to the current player's color. The game ends when neither player can make a valid move. The player with the most discs of their color on the board at the end of the game wins.</p>
-          
-          <h3>Play the game</h3>
-          <p>In the javascript game below you can play against the following five different algorithms of increasing complexity</p>
-          
-          <canvas id="myCanvas" width="480" height="480"></canvas>
-          <br/>
-          <label>Choose an opponent: </label>
-          <select name="agents" id="agents" class="select-othello-opponent" >
-            <option value="random">Random</option>
-            <option value="greedy">Greedy</option>
-            <option value="greedy tuned" selected>Greedy Tuned</option>
-            <option value="minimax" selected>Minimax</option>
-            <option value="minimax tuned" selected>Minimax Tuned</option>
-          </select>
-          <br/>
-          <script src="projects/othello/main.js"></script>
+			<div class="menu-links">
+				<a href="index.html" class="button">
+					<h2>About</h2>
+				</a>
+				<a href="projects.html" class="button">
+					<h2>Projects</h2>
+				</a>
+				<a href="reading.html" class="button">
+					<h2>Reading</h2>
+				</a>
+				<a href="gallery.html" class="button">
+					<h2>Gallery</h2>
+				</a>
+			</div>
+		</div>
+		<main>
+			<section class="projects-contents">
+				<div class="contents-list">
+					<a href="projects/character-markov-chain.html" class="contents-item">
+						<div class="contents-number">01</div>
+						<div class="contents-title">
+							Character Markov Chain
+						</div>
+						<div class="contents-description">
+							Text generation using Markov chains
+						</div>
+					</a>
 
-          <h3>Random Choice</h3>
-          <p>As the name suggests this opponent uses random choices to select its move, don't expect any impressive play here.</p>
-          <h3>Greedy</h3>
-          <p>This greedy opponent chooses the move which flips the most tiles. Whilst tempting, this sort of short term thinking also won't lead to very impressive play.</p>
-          <h3>Greedy Tuned</h3>
-          <p>Like the previous greedy opponent this algorithm seeks to maximise the immediate board state. However unlike the previous greedy opponent the immediate board state is combined with additional bonuses for certain strategic tiles. This weights in favour of edges and corners, whilst down weighting tiles adjacent to edges.</p>
-          <h3>Minimax</h3>
-          <p>The minimax is a tree search algorithm that explores all possible sequences, up to some pre-defined depth. The name arises from the definition of the optimal move as the maximised value relative to the players choice and minimised relative to the opponent's actions. The depth here is set to 4, you will notice that even this relatively shallow search becomes very computationally demanding. More efficient searches exist with algorithms such as alpha-beta pruning and principal variation search.</p>
-          <h3>Minimax Tuned</h3>
-          <p>Like the previous minimax opponent this opponent uses the minimax algorithm to search for the optimal move. However unlike the previous minimax opponent the board value is not just the number of tiles owned, but also weighted by the tile values.</p>
-          <p>I am working to include more options to the online version, using agents trained with RL techniques such as Q-Learning.</p>
+					<a href="projects/ticket-to-ride-ai.html" class="contents-item">
+						<div class="contents-number">02</div>
+						<div class="contents-title">
+							Ticket to Ride AI
+						</div>
+						<div class="contents-description">
+							Game simulation and AI development
+						</div>
+					</a>
 
-          <h3>Implementation</h3>
-          <p>If you're curious to see how I implemented this game and the opponents you can take a look at the code <a href="https://github.com/Dan5762/personal_site_v2/blob/main/projects/othello/main.js" target="_blank">here</a>.</p>
-        </div>
-      </div>
-    </section>
-    <section>
-      <div class="">
-        <h1>Cleanplate</h1>
-      </div>
-      <div class="content">
-        <p>At cleanplate I was building our mobile app, which aimed to enable food influencers to share the carbon impact of the food they promote. Check out the <a href="https://apps.apple.com/tj/app/cleanplate/id1573742155?platform=iphone" target="_blank">app store page</a> for more details. We decided to stop working on this project due to a lack of time for it between me and my friends Tom and Rory.</p>
-      </div>
-    </section>
-    <section>
-      <div class=""></div>
-      <div class="content">
-        <h3>More coming soon...</h3>
-      </div>
-    </section>
-    
-  </main>
-</body>
-<div class="footer">
-  <div class="footer--icons">
-    <a href="https://github.com/Dan5762" target="_blank" ><img src="images/icons/github.svg" alt="github" width=30 height=30></a>
-    <a href="https://www.linkedin.com/in/daniel-long-724b21171/" target="_blank" ><img src="images/icons/linkedin.svg" alt="linkedin" width=30 height=30></a>
-    <a href="https://soundcloud.com/daniel-long-602574572" target="_blank" ><img src="images/icons/soundcloud.svg" alt="soundcloud" width=30 height=30></a>
-  </div>
-</div>
+					<a href="projects/snn-benchmarks.html" class="contents-item">
+						<div class="contents-number">03</div>
+						<div class="contents-title">
+							SNN Benchmarks
+						</div>
+						<div class="contents-description">
+							Spiking neural network research tracker
+						</div>
+					</a>
+
+					<a href="projects/ask-llms.html" class="contents-item">
+						<div class="contents-number">04</div>
+						<div class="contents-title">
+							Ask LLMs
+						</div>
+						<div class="contents-description">
+							Forum-style LLM interface
+						</div>
+					</a>
+
+					<a href="projects/othello-bot.html" class="contents-item">
+						<div class="contents-number">05</div>
+						<div class="contents-title">
+							Othello Bot
+						</div>
+						<div class="contents-description">
+							Interactive game with AI opponents
+						</div>
+					</a>
+
+					<a href="projects/cleanplate.html" class="contents-item">
+						<div class="contents-number">06</div>
+						<div class="contents-title">
+							Cleanplate
+						</div>
+						<div class="contents-description">
+							Carbon impact mobile application
+						</div>
+					</a>
+				</div>
+			</section>
+		</main>
+	</body>
+	<div class="footer">
+		<div class="footer--icons">
+			<a href="https://github.com/Dan5762" target="_blank"
+				><img
+					src="assets/images/icons/github.svg"
+					alt="github"
+					width="30"
+					height="30"
+			/></a>
+			<a
+				href="https://www.linkedin.com/in/daniel-long-724b21171/"
+				target="_blank"
+				><img
+					src="assets/images/icons/linkedin.svg"
+					alt="linkedin"
+					width="30"
+					height="30"
+			/></a>
+			<a
+				href="https://soundcloud.com/daniel-long-602574572"
+				target="_blank"
+				><img
+					src="assets/images/icons/soundcloud.svg"
+					alt="soundcloud"
+					width="30"
+					height="30"
+			/></a>
+		</div>
+	</div>
+</html>

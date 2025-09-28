@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: local('Pacifico Regular'), local('Pacifico-Regular'), url(font/Satoshi-Regular.woff2) format("woff2"), url(font/Satoshi-Regular.woff) format("woff");
+  src: local('Pacifico Regular'), local('Pacifico-Regular'), url(assets/fonts/Satoshi-Regular.woff2) format("woff2"), url(assets/fonts/Satoshi-Regular.woff) format("woff");
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: local('Pacifico Regular'), local('Pacifico-Regular'), url(font/Satoshi-Bold.woff2) format("woff2"), url(font/Satoshi-Bold.woff) format("woff");
+  src: local('Pacifico Regular'), local('Pacifico-Regular'), url(assets/fonts/Satoshi-Bold.woff2) format("woff2"), url(assets/fonts/Satoshi-Bold.woff) format("woff");
   font-weight: 700;
   font-style: normal;
   font-stretch: normal;
@@ -382,4 +382,92 @@ select {
   background-color: white;
   transform: translate(-50%, -50%);
   transition: width 0.2s ease-out, height 0.2s ease-out, opacity 0.2s ease-out;
+}
+
+/* Book-style table of contents */
+.projects-header {
+  text-align: center;
+  margin-bottom: calc(var(--unit) * 8);
+}
+
+.projects-contents {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  max-width: none !important;
+}
+
+.contents-list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--unit) * 3);
+  width: 100%;
+}
+
+.contents-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: baseline;
+  gap: calc(var(--unit) * 2);
+  padding: calc(var(--unit) * 2) 0;
+  border-bottom: 1px solid rgba(153, 153, 153, 0.2);
+  transition: all 0.2s ease;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.contents-item:hover {
+  transform: translateX(calc(var(--unit) * 1));
+  border-bottom-color: var(--altTextColor);
+}
+
+.contents-number {
+  font-size: calc(var(--unit) * 1.5);
+  color: var(--textColor);
+  font-weight: 400;
+  min-width: calc(var(--unit) * 4);
+}
+
+.contents-title {
+  font-size: calc(var(--unit) * 2.5);
+  font-weight: 400;
+  color: var(--altTextColor);
+}
+
+.contents-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--textColor);
+  margin: 0 calc(var(--unit) * 1);
+  height: 1px;
+  opacity: 0.5;
+}
+
+.contents-description {
+  font-size: calc(var(--unit) * 1.5);
+  color: var(--textColor);
+  font-style: italic;
+  text-align: right;
+  min-width: 200px;
+}
+
+@media screen and (max-width: 800px) {
+  .contents-item {
+    grid-template-columns: 1fr;
+    gap: calc(var(--unit) * 1);
+    text-align: left;
+  }
+  
+  .contents-dots {
+    display: none;
+  }
+  
+  .contents-description {
+    text-align: left;
+    min-width: auto;
+  }
+  
+  .contents-number {
+    margin-bottom: calc(var(--unit) * 0.5);
+  }
 }
