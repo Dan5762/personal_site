@@ -25,6 +25,18 @@
   <link rel="stylesheet" href="../main.css">
   <script src="../assets/js/cursor-effect.js"></script>
   <script src="../assets/js/menu.js"></script>
+  
+  <!-- LaTeX support via MathJax -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
 </head>
 
 <body>
@@ -37,11 +49,48 @@
         <h1><a href="https://github.com/Dan5762/character-language-models/tree/main/markov-chains" target="_blank">Character Markov Chain</a></h1>
       </div>
       <div class="content">
-        <div>
-          <img src="../assets/projects/character-language-models/markov_visualization.png" alt="Markov Chain Visualisation" style="max-width: 100%; height: auto;">
-        </div>
-        <p>This character level Markov chain generates text in the style of "The Picture of Dorian Gray" by Oscar Wilde.</p>
-        <p>The model is trained by calculating the transition probabilities seen within the text and then is used to generate new text by randomly sampling the next character based on the transition probabilities from the previous character sequence. You can check out the code for this project <a href="https://github.com/Dan5762/character-language-models/tree/main/markov-chains" target="_blank">here</a>.</p>
+        <p>In an attempt to follow in the footsteps of the progression of natural language processing, I began here with a character level Markov chain. In 1913 Andrey Markov addressed the Imperial Academy of Sciences in St Petersburg with an analysis of Pushkin's Eugene Onegin, I thought I'd follow this thread and instead generate a markov model of a favourite book of mine, "The Picture of Dorian Gray" by Oscar Wilde.</p>
+        
+        <p>A Markov chain is a stochastic model describing a sequence of possible events in which the probability of each event depends only on the state attained in the previous event. The chain is then used to generate new text based on the transition probabilities that were learned from the training text.</p>
+        
+        <h3>Mathematical Definition</h3>
+        <p>Given a sequence of random variables $X_1,\:X_2,\:X_3,\:\ldots$ which exist in the state space $X_i$ the process is a Markov chain if the probability of moving to the next state depends only on the present state and not on the previous states.</p>
+        
+        <p>This means that we have:</p>
+        
+        <p>$$P(X_{n+1} = x \mid X_1 = x_1, \ldots, X_n = x_n) = P(X_{n+1} = x \mid X_n = x_n)$$</p>
+        
+        <h2>Implementation</h2>
+        <p>The implementation of the Markov chain is done in the <a href="https://github.com/Dan5762/language-model-explorations/blob/main/markov-chains/main.py" target="_blank">main.py</a> file. The code is structured as follows:</p>
+        
+        <ol>
+          <li>The text is read from the file and preprocessed.</li>
+          <li>The Markov chain is trained on the text.</li>
+          <li>The chain is used to generate new text.</li>
+          <li>The chain is visualised with a graph of transition probabilities.</li>
+        </ol>
+        
+        <h3>Training</h3>
+        <p>The training of the Markov chain is done by iterating over the text and counting the number of times each character follows a specific sequence of characters. The length of the preceding sequence is defined by the <code>order</code> parameter.</p>
+        
+        <h3>Generation</h3>
+        <p>The generation of new text is done by starting with a random sequence of characters and then using the Markov chain to predict the next character. The next character is chosen based on the transition probabilities learned during training. The training doesn't calculate probabilities, instead it stores a count for each transition. Therefore the probabilities are calculated by normalising the counts.</p>
+        
+        <p>This character is then added to the sequence and the process is repeated until the desired length of the text is reached.</p>
+        
+        <h4>Temperature</h4>
+        <p>To control the randomness of the generated text, a temperature parameter can be used. The temperature controls the randomness of the next character by scaling the probabilities.</p>
+        
+        <p>The temperature scales the counts of the transitions by raising them to the power of <code>1 / temperature</code>. This means that a higher temperature will result in a more uniform distribution of the probabilities, while a lower temperature will result in a more deterministic distribution.</p>
+        
+        <h2>Visualisation</h2>
+        <p>The visualisation of the Markov chain is done by creating a graph of the transition probabilities. The graph is created using the <code>graphviz</code> library.</p>
+        
+        <p>The graph is created by collecting the top 3 most probable transitions for each state and then creating a directed graph with the probabilities as the weights of the edges.</p>
+        
+        <img src="../assets/projects/character-language-models/markov_visualization.png" alt="Markov Chain Visualization" class="project-image">
+        
+        <p>You can check out the code for this project <a href="https://github.com/Dan5762/character-language-models/tree/main/markov-chains" target="_blank">here</a>.</p>
       </div>
     </section>
   </main>

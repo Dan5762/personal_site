@@ -94,13 +94,26 @@ h1 {
 
 h2 {
   font-size: calc(var(--unit) * 2);
-  font-weight: 400;
+  font-weight: 600;
   color: var(--altTextColor);
+  margin-top: calc(var(--unit) * 5);
   margin-bottom: calc(var(--unit) * 2);
 }
 
+/* Special styling for education section h2s on index */
+.education-section h2 {
+  font-size: calc(var(--unit) * 2);
+  font-weight: 400;
+  margin-top: calc(var(--unit) * 2);
+  margin-bottom: calc(var(--unit) * 2);
+}
+
+h2:first-child {
+  margin-top: calc(var(--unit) * 3);
+}
+
 h3 {
-  font-size: calc(var(--unit) * 2.25);
+  font-size: calc(var(--unit) * 1.75);
   font-weight: 600;
   color: var(--altTextColor);
   margin-top: calc(var(--unit) * 4);
@@ -111,8 +124,50 @@ h3:first-child {
   margin-top: 0;
 }
 
+p {
+  margin-bottom: calc(var(--unit) * 2);
+  line-height: 1.7;
+}
+
+p + p {
+  margin-top: calc(var(--unit) * -0.5);
+}
+
+p + h2 {
+  margin-top: calc(var(--unit) * 6);
+}
+
 p + h3 {
   margin-top: calc(var(--unit) * 5);
+}
+
+h4 {
+  font-size: calc(var(--unit) * 1.5);
+  font-weight: 600;
+  color: var(--altTextColor);
+  margin-top: calc(var(--unit) * 3);
+  margin-bottom: calc(var(--unit) * 1.5);
+}
+
+code {
+  font-family: 'Courier New', monospace;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+ol {
+  margin-bottom: calc(var(--unit) * 2);
+  padding-left: calc(var(--unit) * 3);
+  list-style-type: decimal;
+}
+
+ol li {
+  margin-bottom: calc(var(--unit) * 0.5);
+  color: var(--textColor);
+  list-style-type: decimal;
+  list-style-position: outside;
 }
 .centered {
   text-align: center;
