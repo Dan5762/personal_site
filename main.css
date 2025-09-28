@@ -70,8 +70,6 @@ main {
 }
 
 section {
-  display: grid;
-  gap: calc(var(--unit) * 2);
   margin: 0 auto calc(var(--unit) * 6);
   max-width: 900px;
 }
@@ -80,7 +78,6 @@ section {
   section {
     margin: 0 auto calc(var(--unit) * 16);
     max-width: 900px;
-    grid-template-columns: 1fr 2fr;
   }
 }
 
@@ -92,6 +89,7 @@ h1 {
   font-size: calc(var(--unit) * 3);
   font-weight: 700;
   color: var(--altTextColor);
+  margin-bottom: calc(var(--unit) * 3);
 }
 
 h2 {
@@ -100,15 +98,27 @@ h2 {
   color: var(--altTextColor);
   margin-bottom: calc(var(--unit) * 2);
 }
+
+h3 {
+  font-size: calc(var(--unit) * 2.25);
+  font-weight: 600;
+  color: var(--altTextColor);
+  margin-top: calc(var(--unit) * 4);
+  margin-bottom: calc(var(--unit) * 2);
+}
+
+h3:first-child {
+  margin-top: 0;
+}
+
+p + h3 {
+  margin-top: calc(var(--unit) * 5);
+}
 .centered {
   text-align: center;
 }
 .pad-top {
   padding-top: calc(var(--unit) * 3);
-}
-
-p {
-  margin-bottom: calc(var(--unit) * 2);
 }
 
 a {
@@ -119,6 +129,25 @@ a {
 img {
   max-width: 100%;
   max-height: 100%;
+}
+
+.project-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: calc(var(--unit) * 3) auto;
+  border-radius: calc(var(--unit) * 0.5);
+  box-shadow: 0 2px 8px rgba(153, 153, 153, 0.2);
+}
+
+.project-image-small {
+  max-width: 60%;
+}
+
+@media screen and (max-width: 768px) {
+  .project-image-small {
+    max-width: 100%;
+  }
 }
 
 .masonry-grid {
@@ -184,13 +213,12 @@ select {
 
 .menu {
   position: fixed;
-  left: var(--unit);
+  right: var(--unit);
   top: var(--unit);
-  width: 100%; /* Ensures menu spans across the screen */
   display: flex;
   justify-content: flex-end; /* Align items to the right */
   align-items: center; /* Vertically center the items */
-  padding: 0 calc(var(--unit) * 2);
+  z-index: 1000; /* Ensure menu stays on top */
 }
 
 /* .menu-links {
@@ -316,16 +344,17 @@ select {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: calc(var(--unit) * 8);
-    right: var(--unit);
+    top: calc(var(--unit) * 6);
+    right: 0;
     width: 200px;
-    z-index: 10;
+    z-index: 10000;
     gap: 0;
     background: var(--backgroundColor);
     border: 1px solid var(--altTextColor);
     border-radius: 0;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.1);
+    height: auto;
   }
 
   .menu-links.active {

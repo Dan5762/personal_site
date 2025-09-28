@@ -37,44 +37,45 @@
         <h1>Othello Bot</h1>
       </div>
       <div class="content">
-        <div>
-          <h3>Introduction</h3>
-          <p>I've always enjoyed othello, so I figured it would be a great game to apply various ML algorithms to, from a simple greedy search algorithm to training a reinforcement learning (RL) agent.</p>
-          
-          <h3>Othello Rules</h3>
-          <p>The game starts with four discs placed in the center of the board in a square pattern. Each player takes turns placing a disc of their color on the board. A move is valid if it captures at least one of the opponent's discs. Capturing is done by trapping one or more of the opponent's discs between the disc just placed and another disc of the current player's color. The captured discs are then flipped to the current player's color. The game ends when neither player can make a valid move. The player with the most discs of their color on the board at the end of the game wins.</p>
-          
-          <h3>Play the game</h3>
-          <p>In the javascript game below you can play against the following five different algorithms of increasing complexity</p>
-          
-          <canvas id="myCanvas" width="480" height="480"></canvas>
-          <br/>
-          <label>Choose an opponent: </label>
-          <select name="agents" id="agents" class="select-othello-opponent" >
-            <option value="random">Random</option>
-            <option value="greedy">Greedy</option>
-            <option value="greedy tuned" selected>Greedy Tuned</option>
-            <option value="minimax" selected>Minimax</option>
-            <option value="minimax tuned" selected>Minimax Tuned</option>
-          </select>
-          <br/>
-          <script src="../assets/projects/othello/main.js"></script>
+        <p>I've always enjoyed othello, so I figured it would be a great game to apply various ML algorithms to, from a simple greedy search algorithm to training a reinforcement learning (RL) agent.</p>
+        
+        <h3>Othello Rules</h3>
+        <p>The game starts with four discs placed in the center of the board in a square pattern. Each player takes turns placing a disc of their color on the board. A move is valid if it captures at least one of the opponent's discs. Capturing is done by trapping one or more of the opponent's discs between the disc just placed and another disc of the current player's color. The captured discs are then flipped to the current player's color. The game ends when neither player can make a valid move. The player with the most discs of their color on the board at the end of the game wins.</p>
+        
+        <h3>Play the game</h3>
+        <p>In the javascript game below you can play against the following five different algorithms of increasing complexity</p>
+        
+        <canvas id="myCanvas" width="480" height="480"></canvas>
+        <br/>
+        <label>Choose an opponent: </label>
+        <select name="agents" id="agents" class="select-othello-opponent" >
+          <option value="random">Random</option>
+          <option value="greedy">Greedy</option>
+          <option value="greedy tuned" selected>Greedy Tuned</option>
+          <option value="minimax" selected>Minimax</option>
+          <option value="minimax tuned" selected>Minimax Tuned</option>
+        </select>
+        <br/>
+        <script src="../assets/projects/othello/main.js"></script>
 
-          <h3>Random Choice</h3>
-          <p>As the name suggests this opponent uses random choices to select its move, don't expect any impressive play here.</p>
-          <h3>Greedy</h3>
-          <p>This greedy opponent chooses the move which flips the most tiles. Whilst tempting, this sort of short term thinking also won't lead to very impressive play.</p>
-          <h3>Greedy Tuned</h3>
-          <p>Like the previous greedy opponent this algorithm seeks to maximise the immediate board state. However unlike the previous greedy opponent the immediate board state is combined with additional bonuses for certain strategic tiles. This weights in favour of edges and corners, whilst down weighting tiles adjacent to edges.</p>
-          <h3>Minimax</h3>
-          <p>The minimax is a tree search algorithm that explores all possible sequences, up to some pre-defined depth. The name arises from the definition of the optimal move as the maximised value relative to the players choice and minimised relative to the opponent's actions. The depth here is set to 4, you will notice that even this relatively shallow search becomes very computationally demanding. More efficient searches exist with algorithms such as alpha-beta pruning and principal variation search.</p>
-          <h3>Minimax Tuned</h3>
-          <p>Like the previous minimax opponent this opponent uses the minimax algorithm to search for the optimal move. However unlike the previous minimax opponent the board value is not just the number of tiles owned, but also weighted by the tile values.</p>
-          <p>I am working to include more options to the online version, using agents trained with RL techniques such as Q-Learning.</p>
+        <h3>Random Choice</h3>
+        <p>As the name suggests this opponent uses random choices to select its move, don't expect any impressive play here.</p>
+        
+        <h3>Greedy</h3>
+        <p>This greedy opponent chooses the move which flips the most tiles. Whilst tempting, this sort of short term thinking also won't lead to very impressive play.</p>
+        
+        <h3>Greedy Tuned</h3>
+        <p>Like the previous greedy opponent this algorithm seeks to maximise the immediate board state. However unlike the previous greedy opponent the immediate board state is combined with additional bonuses for certain strategic tiles. This weights in favour of edges and corners, whilst down weighting tiles adjacent to edges.</p>
+        
+        <h3>Minimax</h3>
+        <p>The minimax is a tree search algorithm that explores all possible sequences, up to some pre-defined depth. The name arises from the definition of the optimal move as the maximised value relative to the players choice and minimised relative to the opponent's actions. The depth here is set to 4, you will notice that even this relatively shallow search becomes very computationally demanding. More efficient searches exist with algorithms such as alpha-beta pruning and principal variation search.</p>
+        
+        <h3>Minimax Tuned</h3>
+        <p>Like the previous minimax opponent this opponent uses the minimax algorithm to search for the optimal move. However unlike the previous minimax opponent the board value is not just the number of tiles owned, but also weighted by the tile values.</p>
+        <p>I am working to include more options to the online version, using agents trained with RL techniques such as Q-Learning.</p>
 
-          <h3>Implementation</h3>
-          <p>If you're curious to see how I implemented this game and the opponents you can take a look at the code <a href="https://github.com/Dan5762/personal_site_v2/blob/main/projects/othello/main.js" target="_blank">here</a>.</p>
-        </div>
+        <h3>Implementation</h3>
+        <p>If you're curious to see how I implemented this game and the opponents you can take a look at the code <a href="https://github.com/Dan5762/personal_site_v2/blob/main/projects/othello/main.js" target="_blank">here</a>.</p>
       </div>
     </section>
   </main>
