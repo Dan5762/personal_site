@@ -581,11 +581,12 @@ select {
   flex-direction: column;
   gap: calc(var(--unit) * 3);
   width: 100%;
+  counter-reset: project-counter;
 }
 
 .contents-item {
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  grid-template-columns: auto auto auto 1fr auto;
   align-items: baseline;
   gap: calc(var(--unit) * 2);
   padding: calc(var(--unit) * 2) 0;
@@ -594,6 +595,7 @@ select {
   width: 100%;
   text-decoration: none;
   color: inherit;
+  counter-increment: project-counter;
 }
 
 .contents-item:hover {
@@ -608,10 +610,22 @@ select {
   min-width: calc(var(--unit) * 4);
 }
 
+.contents-number::before {
+  content: "0" counter(project-counter);
+}
+
 .contents-title {
   font-size: calc(var(--unit) * 2.5);
   font-weight: 400;
   color: var(--altTextColor);
+}
+
+.contents-date {
+  font-size: calc(var(--unit) * 1.5);
+  color: var(--textColor);
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .contents-dots {
@@ -648,5 +662,10 @@ select {
   
   .contents-number {
     margin-bottom: calc(var(--unit) * 0.5);
+  }
+  
+  .contents-date {
+    margin-bottom: calc(var(--unit) * 0.5);
+    font-size: calc(var(--unit) * 1.25);
   }
 }
