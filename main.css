@@ -536,7 +536,7 @@ select {
 
 .footer--icons {
   display: flex;
-  align-items: flex-center;
+  align-items: center;
   justify-content: right;
 }
 
