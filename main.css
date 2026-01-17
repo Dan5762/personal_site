@@ -329,9 +329,11 @@ select {
   gap: 0;
   height: calc(var(--unit) * 5);
   margin-right: calc(var(--unit) * 2);
-  background: var(--backgroundColor);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--altTextColor);
-  border-radius: 0;
+  border-radius: var(--unit);
   overflow: hidden;
   box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.1);
 }
@@ -379,9 +381,11 @@ select {
   font-size: calc(var(--unit) * 1.75);
   margin-right: var(--unit);
   color: var(--altTextColor);
-  background: var(--backgroundColor);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--altTextColor);
-  border-radius: 0;
+  border-radius: var(--unit);
   padding: calc(var(--unit) * 0.75) calc(var(--unit) * 1);
   transition: all 0.15s ease;
   box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.1);
@@ -404,10 +408,12 @@ select {
     width: 200px;
     z-index: 10000;
     gap: 0;
-    background: var(--backgroundColor);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--altTextColor);
-    border-radius: 0;
-    overflow: visible;
+    border-radius: var(--unit);
+    overflow: hidden;
     box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.1);
     height: auto;
   }
