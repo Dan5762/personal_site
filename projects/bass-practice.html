@@ -1,0 +1,486 @@
+<!-- Made by Alan Long (https://alanlong.design/) & Daniel Long (INSERT_URL) 2022 s-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Bass Practice - Daniel Long</title>
+  <meta name="description" content="A 30-minute guided bass practice routine with timer, metronome, and focus tips.">
+  <meta name="author" content="Daniel Long">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16x16.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <link rel="mask-icon" href="../assets/images/safari-pinned-tab.svg" color="#1A1715">
+  <meta name="msapplication-TileColor" content="#1A1715">
+  <meta name="theme-color" content="#1A1715">
+
+  <meta property="og:title" content="Bass Practice - Daniel Long">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://daniellong.co">
+  <meta property="og:description" content="A 30-minute guided bass practice routine with timer, metronome, and focus tips.">
+
+  <link rel="stylesheet" href="../main.css">
+  <link rel="stylesheet" href="bass-practice.css">
+  <script src="../assets/js/cursor-effect.js"></script>
+  <script src="../assets/js/menu.js"></script>
+</head>
+
+<body>
+  <div class="menu" id="menu-container">
+    <!-- Menu will be loaded by JavaScript -->
+  </div>
+  <main>
+    <section>
+      <div>
+        <h1>Bass Practice</h1>
+      </div>
+      <div class="content">
+        <p>A 30-minute guided practice routine broken into four sections: warmup, arpeggios, transcription, and free play. Each section has a countdown timer, focus tips, and relevant backing track links. The metronome clicks on beats 2 & 4 for feel.</p>
+      </div>
+    </section>
+
+    <section class="bp-app">
+      <div class="session-strip" id="sessionStrip"></div>
+
+      <div class="timer-block" id="timerBlock">
+        <div class="section-meta">
+          <div>
+            <div class="section-index" id="sectionIndex">Section 1 of 4</div>
+            <div class="section-title" id="sectionTitle">Warmup</div>
+            <div class="section-subtitle" id="sectionSubtitle">Metronome on 2 & 4 · Root notes & octaves</div>
+          </div>
+          <div class="section-duration" id="sectionDuration">05:00</div>
+        </div>
+
+        <div class="countdown-row">
+          <div class="countdown" id="countdown">05:00</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label">Progress</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-controls">
+          <button class="btn-primary" id="playBtn" onclick="togglePlay()">Start Session</button>
+          <button class="btn-secondary" id="resetBtn" onclick="resetSection()">Reset</button>
+          <button class="btn-skip" id="skipBtn" onclick="nextSection()">Skip Section &rarr;</button>
+        </div>
+      </div>
+
+      <div id="metronomePanel" class="metronome-panel">
+        <div class="metro-header">
+          <span class="metro-label">Metronome · click to toggle</span>
+        </div>
+        <div class="metro-beats" id="beatDots"></div>
+        <div class="bpm-row">
+          <span class="bpm-label">BPM</span>
+          <input type="range" id="bpmSlider" min="40" max="160" value="72" oninput="updateBPM(this.value)">
+          <span class="bpm-value" id="bpmDisplay">72</span>
+        </div>
+      </div>
+
+      <div class="tips-panel" id="tipsPanel">
+        <div class="tips-header">Focus Points</div>
+        <div id="tipsList"></div>
+      </div>
+
+      <div class="links-panel" id="linksPanel">
+        <div class="links-header" id="linksHeader"></div>
+        <div class="link-grid" id="linksList"></div>
+      </div>
+
+      <!-- Done screen -->
+      <div class="timer-block done-screen bp-hidden" id="doneScreen">
+        <h2>Session Complete</h2>
+        <p>30 minutes. That's the work done.</p>
+        <div class="session-log" id="sessionLog"></div>
+        <button class="btn-primary" onclick="restartSession()">Start Again</button>
+      </div>
+    </section>
+  </main>
+</body>
+<div class="footer">
+  <div class="footer--icons">
+    <a href="https://github.com/Dan5762" target="_blank"><img src="../assets/images/icons/github.svg" alt="github" width="30" height="30"></a>
+    <a href="https://www.linkedin.com/in/daniel-long-724b21171/" target="_blank"><img src="../assets/images/icons/linkedin.svg" alt="linkedin" width="30" height="30"></a>
+    <a href="https://soundcloud.com/daniel-long-602574572" target="_blank"><img src="../assets/images/icons/soundcloud.svg" alt="soundcloud" width="30" height="30"></a>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    title: 'Warmup',
+    subtitle: 'Metronome on 2 & 4 \u00b7 Root notes & octaves',
+    duration: 5 * 60,
+    metronome: true,
+    tips: [
+      '<strong>Play only on beats 2 & 4.</strong> Let the click land, then feel where 1 and 3 are in the silence. That gap is your groove.',
+      '<strong>Keep it dead simple.</strong> Root notes only, or octaves. The point is locking in internally, not playing anything musical.',
+      '<strong>Right hand attention.</strong> Focus on your plucking attack. Consistent tone, consistent volume. The fretting hand will wake itself up.',
+    ],
+    links: null,
+    linksHeader: null,
+  },
+  {
+    title: 'Arpeggios',
+    subtitle: 'Chord tones over a backing track \u00b7 ii\u2013V\u2013I',
+    duration: 10 * 60,
+    metronome: true,
+    tips: [
+      '<strong>Chord tones are your target.</strong> Root, 3rd, 5th, 7th. Practice landing on each one confidently at any point in the bar.',
+      '<strong>Voice lead between chords.</strong> Find the closest chord tone of the next chord instead of jumping back to the root. That\'s what makes walking lines flow.',
+      '<strong>One position, then connect.</strong> Nail the arpeggio in one place on the neck first, then start linking positions.',
+    ],
+    linksHeader: 'Backing Tracks',
+    links: [
+      { label: 'Blues', title: 'Slow Blues in G', desc: '12-bar, 70bpm \u00b7 good for arpeggios', url: 'https://www.youtube.com/results?search_query=slow+blues+backing+track+bass+G+70bpm' },
+      { label: 'Jazz', title: 'ii\u2013V\u2013I in C', desc: 'Classic progression \u00b7 walking bass', url: 'https://www.youtube.com/results?search_query=ii+V+I+jazz+backing+track+bass+C+major' },
+      { label: 'Funk', title: 'Funk Groove 90bpm', desc: 'Pocket workout \u00b7 chord tones', url: 'https://www.youtube.com/results?search_query=funk+backing+track+bass+90bpm+Gm' },
+      { label: 'iReal', title: 'iReal Pro App', desc: 'Generate any progression', url: 'https://irealpro.com/' },
+    ],
+  },
+  {
+    title: 'Transcription',
+    subtitle: 'Learn by ear \u00b7 no looking it up',
+    duration: 10 * 60,
+    metronome: false,
+    tips: [
+      '<strong>4 to 8 bars max.</strong> Small and solid beats large and shaky. Get it note-perfect, then loop it until it\'s automatic.',
+      '<strong>No tabs, no notation.</strong> The ear-to-hand connection is the whole point. Looking it up short-circuits the most important part.',
+      '<strong>Sing it first.</strong> If you can\'t hum the line, you\'re not ready to play it. Pitch it in your head before you touch the bass.',
+    ],
+    linksHeader: 'Suggestions',
+    links: [
+      { label: 'Jamerson', title: 'What\'s Going On', desc: 'Marvin Gaye \u00b7 melodic & fluid', url: 'https://www.youtube.com/results?search_query=Marvin+Gaye+What%27s+Going+On+bass' },
+      { label: 'Pino', title: 'Have a Little Faith', desc: 'Pino Palladino \u00b7 pocket & soul', url: 'https://www.youtube.com/results?search_query=Pino+Palladino+Have+a+Little+Faith+bass' },
+      { label: 'Jaco', title: 'Continuum', desc: 'Jaco Pastorius \u00b7 lyrical fretless', url: 'https://www.youtube.com/results?search_query=Jaco+Pastorius+Continuum+bass' },
+      { label: 'Any line', title: 'Browse Bass Lines', desc: 'Pick something you love', url: 'https://www.youtube.com/results?search_query=bass+line+isolated+slow+downed' },
+    ],
+  },
+  {
+    title: 'Free Play',
+    subtitle: 'No goals \u00b7 use what you\'ve practised',
+    duration: 5 * 60,
+    metronome: false,
+    tips: [
+      '<strong>No agenda.</strong> This is where things consolidate. Play whatever comes naturally after the session.',
+      '<strong>Try a walking line.</strong> Put on a backing track and see if the chord tones you drilled start appearing without thinking.',
+      '<strong>Record yourself.</strong> Even just your phone. You\'ll hear things you can\'t feel in the moment.',
+    ],
+    linksHeader: 'Back It Up',
+    links: [
+      { label: 'Blues', title: 'Slow Blues Jam', desc: 'Relaxed \u00b7 lots of space', url: 'https://www.youtube.com/results?search_query=slow+blues+jam+backing+track+bass' },
+      { label: 'Jazz', title: 'Easy Jazz Standards', desc: 'Autumn Leaves, Blue Bossa', url: 'https://www.youtube.com/results?search_query=autumn+leaves+jazz+backing+track+bass' },
+      { label: 'Funk', title: 'Funk Jam', desc: 'Groove \u00b7 lock with the kick', url: 'https://www.youtube.com/results?search_query=funk+jam+backing+track+bass+slow' },
+      { label: 'Soul', title: 'Soul / R&B Groove', desc: 'Walking lines welcome', url: 'https://www.youtube.com/results?search_query=soul+RnB+backing+track+bass' },
+    ],
+  }
+];
+
+let currentSection = 0;
+let timeLeft = 0;
+let totalTime = 0;
+let timerInterval = null;
+let running = false;
+
+// Audio context for metronome
+let audioCtx = null;
+let metroTimeout = null;
+let currentBeat = 0;
+let bpm = 72;
+let metroRunning = false;
+// 0=off, 1=faint, 2=accented. Default: 1&3 off, 2&4 accented
+let beatStates = [0, 2, 0, 2];
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playClick(isAccent) {
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.value = isAccent ? 1200 : 800;
+  gain.gain.setValueAtTime(isAccent ? 0.35 : 0.12, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.04);
+}
+
+function tickMetronome() {
+  const section = SECTIONS[currentSection];
+  if (!section.metronome || !metroRunning) return;
+
+  const beatNum = currentBeat % 4;
+  const state = beatStates[beatNum];
+
+  // Update dot visuals
+  const dots = document.querySelectorAll('.beat-dot');
+  dots.forEach((d, i) => {
+    d.classList.remove('active-beat');
+    if (i === beatNum) d.classList.add('active-beat');
+  });
+
+  // Play sound based on state: 0=silent, 1=faint, 2=accented
+  if (state === 1) playClick(false);
+  else if (state === 2) playClick(true);
+
+  currentBeat++;
+  const interval = (60 / bpm) * 1000;
+  metroTimeout = setTimeout(tickMetronome, interval);
+}
+
+function startMetronome() {
+  stopMetronome();
+  currentBeat = 0;
+  metroRunning = true;
+  tickMetronome();
+}
+
+function stopMetronome() {
+  metroRunning = false;
+  clearTimeout(metroTimeout);
+  document.querySelectorAll('.beat-dot').forEach(d => d.classList.remove('active-beat'));
+}
+
+function updateBPM(val) {
+  bpm = parseInt(val);
+  document.getElementById('bpmDisplay').textContent = bpm;
+  if (metroRunning) {
+    stopMetronome();
+    startMetronome();
+  }
+}
+
+// Build strip
+function buildStrip() {
+  const strip = document.getElementById('sessionStrip');
+  strip.innerHTML = '';
+  SECTIONS.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'strip-segment';
+    el.style.flex = s.duration;
+    el.onclick = () => { if (!running) jumpToSection(i); };
+    if (i < currentSection) el.classList.add('done');
+    if (i === currentSection) el.classList.add('active');
+    strip.appendChild(el);
+  });
+}
+
+function jumpToSection(i) {
+  currentSection = i;
+  loadSection();
+}
+
+function loadSection() {
+  const s = SECTIONS[currentSection];
+  timeLeft = s.duration;
+  totalTime = s.duration;
+
+  document.getElementById('sectionIndex').textContent = 'Section ' + (currentSection+1) + ' of ' + SECTIONS.length;
+  document.getElementById('sectionTitle').textContent = s.title;
+  document.getElementById('sectionSubtitle').textContent = s.subtitle;
+  document.getElementById('sectionDuration').textContent = formatTime(s.duration);
+  document.getElementById('countdown').textContent = formatTime(timeLeft);
+  document.getElementById('countdown').className = 'countdown';
+  document.getElementById('progressFill').style.width = '0%';
+
+  document.getElementById('timerBlock').classList.remove('running');
+  document.getElementById('playBtn').textContent = running ? 'Pause' : 'Start';
+
+  // Metronome
+  const mp = document.getElementById('metronomePanel');
+  if (s.metronome) {
+    mp.classList.remove('bp-hidden');
+    buildBeatDots();
+  } else {
+    mp.classList.add('bp-hidden');
+    stopMetronome();
+  }
+
+  // Tips
+  const tl = document.getElementById('tipsList');
+  tl.innerHTML = s.tips.map(t => '<div class="tip-item">' + t + '</div>').join('');
+
+  // Links
+  const lp = document.getElementById('linksPanel');
+  const ll = document.getElementById('linksList');
+  const lh = document.getElementById('linksHeader');
+  if (s.links) {
+    lp.classList.remove('bp-hidden');
+    lh.textContent = s.linksHeader;
+    ll.innerHTML = s.links.map(l =>
+      '<a class="link-card" href="' + l.url + '" target="_blank">' +
+        '<div class="link-card-label">' + l.label + '</div>' +
+        '<div class="link-card-title">' + l.title + '</div>' +
+        '<div class="link-card-desc">' + l.desc + '</div>' +
+      '</a>'
+    ).join('');
+  } else {
+    lp.classList.add('bp-hidden');
+  }
+
+  buildStrip();
+}
+
+function beatStateClass(state) {
+  if (state === 0) return 'beat-off';
+  if (state === 1) return 'beat-faint';
+  return 'beat-accent';
+}
+
+function buildBeatDots() {
+  const container = document.getElementById('beatDots');
+  container.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const d = document.createElement('div');
+    d.className = 'beat-dot ' + beatStateClass(beatStates[i]);
+    d.textContent = i + 1;
+    d.onclick = function() { cycleBeatState(i); };
+    container.appendChild(d);
+  }
+}
+
+function cycleBeatState(i) {
+  beatStates[i] = (beatStates[i] + 1) % 3;
+  const dots = document.querySelectorAll('.beat-dot');
+  const d = dots[i];
+  d.classList.remove('beat-off', 'beat-faint', 'beat-accent');
+  d.classList.add(beatStateClass(beatStates[i]));
+}
+
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+
+function togglePlay() {
+  if (running) {
+    pauseSession();
+  } else {
+    startSession();
+  }
+}
+
+function startSession() {
+  running = true;
+  document.getElementById('playBtn').textContent = 'Pause';
+  document.getElementById('timerBlock').classList.add('running');
+
+  if (SECTIONS[currentSection].metronome) startMetronome();
+
+  timerInterval = setInterval(function() {
+    timeLeft--;
+    updateDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      sectionComplete();
+    }
+  }, 1000);
+}
+
+function pauseSession() {
+  running = false;
+  clearInterval(timerInterval);
+  stopMetronome();
+  document.getElementById('playBtn').textContent = 'Resume';
+  document.getElementById('timerBlock').classList.remove('running');
+}
+
+function updateDisplay() {
+  const cd = document.getElementById('countdown');
+  cd.textContent = formatTime(timeLeft);
+  if (timeLeft <= 30) cd.className = 'countdown urgent';
+  else if (timeLeft <= 60) cd.className = 'countdown warning';
+  else cd.className = 'countdown';
+
+  const pct = ((totalTime - timeLeft) / totalTime) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function resetSection() {
+  pauseSession();
+  running = false;
+  timeLeft = SECTIONS[currentSection].duration;
+  document.getElementById('countdown').textContent = formatTime(timeLeft);
+  document.getElementById('countdown').className = 'countdown';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('playBtn').textContent = 'Start';
+}
+
+function sectionComplete() {
+  stopMetronome();
+  running = false;
+  document.getElementById('timerBlock').classList.remove('running');
+
+  if (currentSection < SECTIONS.length - 1) {
+    currentSection++;
+    loadSection();
+    startSession();
+  } else {
+    showDoneScreen();
+  }
+}
+
+function nextSection() {
+  clearInterval(timerInterval);
+  stopMetronome();
+  running = false;
+  if (currentSection < SECTIONS.length - 1) {
+    currentSection++;
+    loadSection();
+  } else {
+    showDoneScreen();
+  }
+}
+
+function showDoneScreen() {
+  document.getElementById('timerBlock').classList.add('bp-hidden');
+  document.getElementById('metronomePanel').classList.add('bp-hidden');
+  document.getElementById('tipsPanel').classList.add('bp-hidden');
+  document.getElementById('linksPanel').classList.add('bp-hidden');
+  document.getElementById('doneScreen').classList.remove('bp-hidden');
+
+  const log = document.getElementById('sessionLog');
+  log.innerHTML = SECTIONS.map(s =>
+    '<div class="session-log-row">' +
+      '<span class="name">' + s.title + '</span>' +
+      '<span>' + formatTime(s.duration) + '</span>' +
+      '<span class="tick">\u2713</span>' +
+    '</div>'
+  ).join('') +
+  '<div class="session-log-row">' +
+    '<span class="name" style="color:var(--bp-text)">Total</span>' +
+    '<span style="color:var(--bp-text)">30:00</span>' +
+    '<span></span>' +
+  '</div>';
+
+  buildStrip();
+  document.querySelectorAll('.strip-segment').forEach(s => { s.classList.remove('active'); s.classList.add('done'); });
+}
+
+function restartSession() {
+  currentSection = 0;
+  running = false;
+  document.getElementById('doneScreen').classList.add('bp-hidden');
+  document.getElementById('timerBlock').classList.remove('bp-hidden');
+  document.getElementById('tipsPanel').classList.remove('bp-hidden');
+  loadSection();
+}
+
+// Init
+buildBeatDots();
+loadSection();
+</script>
+</html>

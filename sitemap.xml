@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://daniellong.co</loc>
+    <loc>https://daniellong.co/</loc>
   </url>
   <url>
-    <loc>https://daniellong.co/projects</loc>
+    <loc>https://daniellong.co/projects.html</loc>
   </url>
   <url>
-    <loc>https://daniellong.co/reading</loc>
+    <loc>https://daniellong.co/reading.html</loc>
   </url>
   <url>
-    <loc>https://daniellong.co/gallery</loc>
+    <loc>https://daniellong.co/gallery.html</loc>
+  </url>
+<url>
+    <loc>https://daniellong.co/projects/bass-practice.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/second-order-cybernetics.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/clean-energy-wiki.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/flight-offset.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/character-markov-chain.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/ticket-to-ride-ai.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/ask-llms.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/snn-benchmarks.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/othello-bot.html</loc>
+  </url>
+  <url>
+    <loc>https://daniellong.co/projects/cleanplate.html</loc>
   </url>
 </urlset>
