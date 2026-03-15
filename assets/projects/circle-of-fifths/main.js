@@ -2,17 +2,14 @@
   'use strict';
 
   // ─── CIRCLE OF FIFTHS DATA ───
-  // Standard circle of fifths order (clockwise)
   const CIRCLE = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Db', 'Ab', 'Eb', 'Bb', 'F'];
 
-  // Frequencies in octave 4 (Hz)
   const FREQ = {
     'C': 261.63, 'G': 392.00, 'D': 293.66, 'A': 440.00,
     'E': 329.63, 'B': 493.88, 'F#': 369.99, 'Db': 277.18,
     'Ab': 415.30, 'Eb': 311.13, 'Bb': 466.16, 'F': 349.23
   };
 
-  // Interval names for each step around the circle
   const INTERVALS = {
     1: 'Perfect 5th', 2: 'Major 2nd', 3: 'Major 6th',
     4: 'Major 3rd', 5: 'Major 7th', 6: 'Tritone',
@@ -20,7 +17,6 @@
     10: 'Minor 7th', 11: 'Perfect 4th'
   };
 
-  // Chord intervals in semitones from root
   const CHORDS = {
     'none':  [0],
     'major': [0, 4, 7],
@@ -34,6 +30,13 @@
     'aug':   [0, 4, 8],
     'power': [0, 7]
   };
+
+  const BEAM_COLORS = [
+    { r: 255, g: 255, b: 255 },
+    { r: 120, g: 180, b: 255 },
+    { r: 255, g: 180, b: 100 },
+    { r: 150, g: 255, b: 150 }
+  ];
 
   // ─── CANVAS SETUP ───
   const canvas = document.getElementById('cofCanvas');
@@ -51,9 +54,9 @@
   let tempo = 140;
   let chordType = 'none';
   let looping = false;
-  let startNoteIndex = 3; // A is at index 3 in CIRCLE
-  let currentIndex = startNoteIndex;
-  let visitedPath = [startNoteIndex];
+  let beamCount = 1;
+  let startNoteIndex = 3;
+  let beams = [];
   let isPlaying = false;
   let audioCtx = null;
 
@@ -62,6 +65,20 @@
   let stepTimerId = null;
   let animFrameId = null;
   let stepStartTime = 0;
+
+  // ─── BEAMS ───
+  function initBeams() {
+    beams = [];
+    var spacing = 12 / beamCount;
+    for (var b = 0; b < beamCount; b++) {
+      var start = (startNoteIndex + Math.round(b * spacing)) % 12;
+      beams.push({
+        startIndex: start,
+        currentIndex: start,
+        visitedPath: [start]
+      });
+    }
+  }
 
   // ─── AUDIO ───
   function getAudioCtx() {
@@ -75,7 +92,8 @@
 
     var rootFreq = FREQ[noteName];
     var intervals = CHORDS[chordType];
-    var volume = intervals.length === 1 ? 0.22 : 0.18 / Math.sqrt(intervals.length);
+    var totalVoices = intervals.length * beamCount;
+    var volume = totalVoices === 1 ? 0.22 : 0.18 / Math.sqrt(totalVoices);
     var now = ctx.currentTime;
 
     for (var i = 0; i < intervals.length; i++) {
@@ -97,7 +115,6 @@
 
   // ─── GEOMETRY ───
   function noteAngle(index) {
-    // Start at 12 o'clock (-π/2), go clockwise
     return -Math.PI / 2 + index * (Math.PI * 2 / 12);
   }
 
@@ -111,6 +128,11 @@
     return { x: CX + LABEL_RADIUS * Math.cos(a), y: CY + LABEL_RADIUS * Math.sin(a) };
   }
 
+  function beamRgba(bIdx, alpha) {
+    var c = BEAM_COLORS[bIdx % BEAM_COLORS.length];
+    return 'rgba(' + c.r + ', ' + c.g + ', ' + c.b + ', ' + alpha + ')';
+  }
+
   // ─── DRAWING ───
   function draw() {
     ctx.clearRect(0, 0, W, H);
@@ -122,72 +144,89 @@
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    // Completed path lines
-    for (var i = 1; i < visitedPath.length; i++) {
-      var from = notePos(visitedPath[i - 1]);
-      var to = notePos(visitedPath[i]);
-      var alpha = 0.12 + 0.38 * (i / visitedPath.length);
-      ctx.beginPath();
-      ctx.moveTo(from.x, from.y);
-      ctx.lineTo(to.x, to.y);
-      ctx.strokeStyle = 'rgba(255, 255, 255, ' + alpha + ')';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
+    // Draw each beam
+    for (var b = 0; b < beams.length; b++) {
+      var beam = beams[b];
+
+      // Completed path lines
+      for (var i = 1; i < beam.visitedPath.length; i++) {
+        var from = notePos(beam.visitedPath[i - 1]);
+        var to = notePos(beam.visitedPath[i]);
+        var alpha = 0.12 + 0.38 * (i / beam.visitedPath.length);
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.strokeStyle = beamRgba(b, alpha);
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // Preview line when idle
+      if (!isPlaying && beam.visitedPath.length === 1) {
+        var previewFrom = notePos(beam.startIndex);
+        var previewTo = notePos((beam.startIndex + stepSize) % 12);
+        ctx.beginPath();
+        ctx.moveTo(previewFrom.x, previewFrom.y);
+        ctx.lineTo(previewTo.x, previewTo.y);
+        ctx.strokeStyle = beamRgba(b, 0.2);
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Animated beam
+      if (isPlaying && beam.visitedPath.length > 0) {
+        var fromIdx = beam.visitedPath[beam.visitedPath.length - 1];
+        var toIdx = (fromIdx + stepSize) % 12;
+        var fromP = notePos(fromIdx);
+        var toP = notePos(toIdx);
+
+        var t = 1 - Math.pow(1 - animProgress, 3);
+        var bx = fromP.x + (toP.x - fromP.x) * t;
+        var by = fromP.y + (toP.y - fromP.y) * t;
+
+        ctx.beginPath();
+        ctx.moveTo(fromP.x, fromP.y);
+        ctx.lineTo(bx, by);
+        ctx.strokeStyle = beamRgba(b, 0.55);
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(bx, by, 4, 0, Math.PI * 2);
+        ctx.fillStyle = beamRgba(b, 1);
+        ctx.fill();
+      }
     }
 
-    // Preview line showing the selected interval when idle
-    if (!isPlaying && visitedPath.length === 1) {
-      var previewFrom = notePos(startNoteIndex);
-      var previewTo = notePos((startNoteIndex + stepSize) % 12);
-      ctx.beginPath();
-      ctx.moveTo(previewFrom.x, previewFrom.y);
-      ctx.lineTo(previewTo.x, previewTo.y);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([6, 4]);
-      ctx.stroke();
-      ctx.setLineDash([]);
+    // Note dots and labels — aggregate across all beams
+    var allVisited = new Set();
+    var allCurrent = new Set();
+    var allStarts = new Set();
+    for (var b = 0; b < beams.length; b++) {
+      allStarts.add(beams[b].startIndex);
+      allCurrent.add(beams[b].currentIndex);
+      for (var j = 0; j < beams[b].visitedPath.length; j++) {
+        allVisited.add(beams[b].visitedPath[j]);
+      }
     }
 
-    // Animated beam
-    if (isPlaying && visitedPath.length > 0) {
-      var fromIdx = visitedPath[visitedPath.length - 1];
-      var toIdx = (fromIdx + stepSize) % 12;
-      var fromP = notePos(fromIdx);
-      var toP = notePos(toIdx);
-
-      // Ease function (ease out cubic)
-      var t = 1 - Math.pow(1 - animProgress, 3);
-      var bx = fromP.x + (toP.x - fromP.x) * t;
-      var by = fromP.y + (toP.y - fromP.y) * t;
-
-      // Beam line
-      ctx.beginPath();
-      ctx.moveTo(fromP.x, fromP.y);
-      ctx.lineTo(bx, by);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      // Beam dot
-      ctx.beginPath();
-      ctx.arc(bx, by, 4, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
+    var previewTargets = new Set();
+    if (!isPlaying && beams[0].visitedPath.length === 1) {
+      for (var b = 0; b < beams.length; b++) {
+        previewTargets.add((beams[b].startIndex + stepSize) % 12);
+      }
     }
 
-    // Note dots and labels
-    var visitedSet = new Set(visitedPath);
-    var previewTarget = (!isPlaying && visitedPath.length === 1) ? (startNoteIndex + stepSize) % 12 : -1;
     for (var n = 0; n < 12; n++) {
       var pos = notePos(n);
       var lpos = labelPos(n);
-      var isStart = n === startNoteIndex;
-      var isCurrent = n === currentIndex;
-      var isVisited = visitedSet.has(n);
-      var isPreview = n === previewTarget;
+      var isCurrent = allCurrent.has(n);
+      var isStart = allStarts.has(n);
+      var isVisited = allVisited.has(n);
+      var isPreview = previewTargets.has(n);
 
-      // Dot
       var dotR = (isCurrent || isStart || isPreview) ? DOT_RADIUS + 2 : DOT_RADIUS;
       ctx.beginPath();
       ctx.arc(pos.x, pos.y, dotR, 0, Math.PI * 2);
@@ -204,7 +243,6 @@
       }
       ctx.fill();
 
-      // Glow for current note
       if (isCurrent && isPlaying) {
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, dotR + 6, 0, Math.PI * 2);
@@ -212,7 +250,6 @@
         ctx.fill();
       }
 
-      // Label
       ctx.font = (isCurrent || isStart || isPreview) ? '600 15px Satoshi, sans-serif' : '400 13px Satoshi, sans-serif';
       ctx.fillStyle = isCurrent ? '#fff' : isVisited ? 'rgba(255, 255, 255, 0.75)' : isPreview ? 'rgba(255, 255, 255, 0.5)' : isStart ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)';
       ctx.textAlign = 'center';
@@ -226,18 +263,33 @@
     var container = document.getElementById('sequenceDisplay');
     container.innerHTML = '';
 
-    for (var i = 0; i < visitedPath.length; i++) {
-      if (i > 0) {
-        var arrow = document.createElement('span');
-        arrow.className = 'seq-arrow';
-        arrow.textContent = '\u2192';
-        container.appendChild(arrow);
+    for (var b = 0; b < beams.length; b++) {
+      var beam = beams[b];
+      var row = document.createElement('div');
+      row.className = 'seq-row';
+
+      if (beams.length > 1) {
+        var dot = document.createElement('span');
+        dot.className = 'seq-beam-dot';
+        dot.style.background = beamRgba(b, 1);
+        row.appendChild(dot);
       }
-      var note = document.createElement('span');
-      note.className = 'seq-note';
-      if (i === visitedPath.length - 1) note.classList.add('active');
-      note.textContent = CIRCLE[visitedPath[i]];
-      container.appendChild(note);
+
+      for (var i = 0; i < beam.visitedPath.length; i++) {
+        if (i > 0) {
+          var arrow = document.createElement('span');
+          arrow.className = 'seq-arrow';
+          arrow.textContent = '\u2192';
+          row.appendChild(arrow);
+        }
+        var note = document.createElement('span');
+        note.className = 'seq-note';
+        if (i === beam.visitedPath.length - 1) note.classList.add('active');
+        note.textContent = CIRCLE[beam.visitedPath[i]];
+        row.appendChild(note);
+      }
+
+      container.appendChild(row);
     }
   }
 
@@ -249,17 +301,21 @@
   }
 
   function stepForward() {
-    var nextIndex = (currentIndex + stepSize) % 12;
-    currentIndex = nextIndex;
-    visitedPath.push(currentIndex);
-    playNote(CIRCLE[currentIndex]);
+    for (var b = 0; b < beams.length; b++) {
+      var beam = beams[b];
+      beam.currentIndex = (beam.currentIndex + stepSize) % 12;
+      beam.visitedPath.push(beam.currentIndex);
+      playNote(CIRCLE[beam.currentIndex]);
+    }
     updateSequence();
     draw();
 
-    // Check if we've returned to start
-    if (currentIndex === startNoteIndex && visitedPath.length > 1) {
+    // All beams complete at the same time (same step size)
+    if (beams[0].currentIndex === beams[0].startIndex && beams[0].visitedPath.length > 1) {
       if (looping) {
-        visitedPath = [startNoteIndex];
+        for (var b = 0; b < beams.length; b++) {
+          beams[b].visitedPath = [beams[b].startIndex];
+        }
         animProgress = 0;
         updateSequence();
       } else {
@@ -292,11 +348,11 @@
 
   // ─── CONTROLS ───
   function hasCompleted() {
-    return !isPlaying && visitedPath.length > 1 && currentIndex === startNoteIndex;
+    return !isPlaying && beams[0].visitedPath.length > 1 && beams[0].currentIndex === beams[0].startIndex;
   }
 
   function isMidRun() {
-    return isPlaying || (visitedPath.length > 1 && currentIndex !== startNoteIndex);
+    return isPlaying || (beams[0].visitedPath.length > 1 && beams[0].currentIndex !== beams[0].startIndex);
   }
 
   function stopAnimation() {
@@ -313,10 +369,8 @@
       return;
     }
 
-    // If completed, reset before playing
     if (hasCompleted()) {
-      currentIndex = startNoteIndex;
-      visitedPath = [startNoteIndex];
+      initBeams();
       animProgress = 0;
       updateSequence();
     }
@@ -324,8 +378,9 @@
     getAudioCtx();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    // Play start note
-    playNote(CIRCLE[currentIndex]);
+    for (var b = 0; b < beams.length; b++) {
+      playNote(CIRCLE[beams[b].currentIndex]);
+    }
 
     isPlaying = true;
     animProgress = 0;
@@ -336,8 +391,7 @@
 
   function reset() {
     stopAnimation();
-    currentIndex = startNoteIndex;
-    visitedPath = [startNoteIndex];
+    initBeams();
     animProgress = 0;
     updateButtons();
     updateSequence();
@@ -361,7 +415,6 @@
     document.getElementById('intervalDisplay').textContent = INTERVALS[stepSize];
     document.getElementById('notesCountDisplay').textContent = getNumNotes();
 
-    // Build pattern description
     var notes = [];
     var idx = startNoteIndex;
     notes.push(CIRCLE[idx]);
@@ -407,6 +460,11 @@
     chordType = this.value;
   });
 
+  document.getElementById('beamCountSelect').addEventListener('change', function () {
+    beamCount = parseInt(this.value);
+    reset();
+  });
+
   document.getElementById('playBtn').addEventListener('click', play);
   document.getElementById('resetBtn').addEventListener('click', reset);
   document.getElementById('loopBtn').addEventListener('click', function () {
@@ -431,6 +489,7 @@
   // ─── INIT ───
   buildStartNoteSelect();
   buildTickMarks();
+  initBeams();
   updateInfo();
   updateButtons();
   updateSequence();

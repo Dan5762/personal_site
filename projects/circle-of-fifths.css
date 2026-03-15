@@ -210,9 +210,23 @@
 /* ─── SEQUENCE DISPLAY ─── */
 .cof-sequence {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: calc(var(--unit) * 0.75);
   min-height: calc(var(--unit) * 4);
+}
+
+.seq-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--unit) * 0.75);
+}
+
+.seq-beam-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .seq-note {
