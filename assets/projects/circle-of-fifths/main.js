@@ -371,8 +371,23 @@
   document.getElementById('playBtn').addEventListener('click', play);
   document.getElementById('resetBtn').addEventListener('click', reset);
 
+  // ─── BUILD TICK MARKS ───
+  function buildTickMarks() {
+    var wrap = document.getElementById('stepSliderWrap');
+    var marks = document.createElement('div');
+    marks.className = 'tick-marks';
+    for (var i = 1; i <= 11; i++) {
+      var tick = document.createElement('div');
+      tick.className = 'tick';
+      tick.style.left = ((i - 1) / 10 * 100) + '%';
+      marks.appendChild(tick);
+    }
+    wrap.appendChild(marks);
+  }
+
   // ─── INIT ───
   buildStartNoteSelect();
+  buildTickMarks();
   updateInfo();
   updateButtons();
   updateSequence();

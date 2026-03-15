@@ -50,7 +50,9 @@
       <div class="cof-controls">
         <div class="control-row">
           <span class="control-label">Interval</span>
-          <input type="range" id="stepSlider" min="1" max="11" value="7">
+          <div class="slider-ticks" id="stepSliderWrap">
+            <input type="range" id="stepSlider" min="1" max="11" value="7" step="1">
+          </div>
           <span class="control-value" id="intervalDisplay">Perfect 5th</span>
         </div>
 
