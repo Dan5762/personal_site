@@ -20,6 +20,21 @@
     10: 'Minor 7th', 11: 'Perfect 4th'
   };
 
+  // Chord intervals in semitones from root
+  const CHORDS = {
+    'none':  [0],
+    'major': [0, 4, 7],
+    'minor': [0, 3, 7],
+    'dom7':  [0, 4, 7, 10],
+    'maj7':  [0, 4, 7, 11],
+    'min7':  [0, 3, 7, 10],
+    'sus4':  [0, 5, 7],
+    'sus2':  [0, 2, 7],
+    'dim':   [0, 3, 6],
+    'aug':   [0, 4, 8],
+    'power': [0, 7]
+  };
+
   // ─── CANVAS SETUP ───
   const canvas = document.getElementById('cofCanvas');
   const ctx = canvas.getContext('2d');
@@ -34,6 +49,7 @@
   // ─── STATE ───
   let stepSize = 7;
   let tempo = 140;
+  let chordType = 'none';
   let startNoteIndex = 3; // A is at index 3 in CIRCLE
   let currentIndex = startNoteIndex;
   let visitedPath = [startNoteIndex];
@@ -56,20 +72,26 @@
     var ctx = getAudioCtx();
     if (ctx.state === 'suspended') ctx.resume();
 
-    var osc = ctx.createOscillator();
-    var gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.frequency.value = FREQ[noteName];
-    osc.type = 'triangle';
-
+    var rootFreq = FREQ[noteName];
+    var intervals = CHORDS[chordType];
+    var volume = intervals.length === 1 ? 0.22 : 0.18 / Math.sqrt(intervals.length);
     var now = ctx.currentTime;
-    gain.gain.setValueAtTime(0.22, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
-    osc.start(now);
-    osc.stop(now + 0.9);
+    for (var i = 0; i < intervals.length; i++) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.frequency.value = rootFreq * Math.pow(2, intervals[i] / 12);
+      osc.type = 'triangle';
+
+      gain.gain.setValueAtTime(volume, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+      osc.start(now);
+      osc.stop(now + 0.9);
+    }
   }
 
   // ─── GEOMETRY ───
@@ -366,6 +388,10 @@
     startNoteIndex = parseInt(this.value);
     reset();
     updateInfo();
+  });
+
+  document.getElementById('chordSelect').addEventListener('change', function () {
+    chordType = this.value;
   });
 
   document.getElementById('playBtn').addEventListener('click', play);
