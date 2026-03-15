@@ -55,6 +55,7 @@
   let chordType = 'none';
   let looping = false;
   let beamCount = 1;
+  let beamSpacing = 6;
   let startNoteIndex = 3;
   let beams = [];
   let isPlaying = false;
@@ -69,15 +70,18 @@
   // ─── BEAMS ───
   function initBeams() {
     beams = [];
-    var spacing = 12 / beamCount;
     for (var b = 0; b < beamCount; b++) {
-      var start = (startNoteIndex + Math.round(b * spacing)) % 12;
+      var start = (startNoteIndex + b * beamSpacing) % 12;
       beams.push({
         startIndex: start,
         currentIndex: start,
         visitedPath: [start]
       });
     }
+  }
+
+  function updateSpacingVisibility() {
+    document.getElementById('beamSpacingRow').style.display = beamCount > 1 ? '' : 'none';
   }
 
   // ─── AUDIO ───
@@ -462,6 +466,14 @@
 
   document.getElementById('beamCountSelect').addEventListener('change', function () {
     beamCount = parseInt(this.value);
+    beamSpacing = Math.round(12 / beamCount);
+    document.getElementById('beamSpacingSelect').value = beamSpacing;
+    updateSpacingVisibility();
+    reset();
+  });
+
+  document.getElementById('beamSpacingSelect').addEventListener('change', function () {
+    beamSpacing = parseInt(this.value);
     reset();
   });
 
@@ -489,6 +501,7 @@
   // ─── INIT ───
   buildStartNoteSelect();
   buildTickMarks();
+  updateSpacingVisibility();
   initBeams();
   updateInfo();
   updateButtons();
