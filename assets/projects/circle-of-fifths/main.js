@@ -50,6 +50,7 @@
   let stepSize = 7;
   let tempo = 140;
   let chordType = 'none';
+  let looping = false;
   let startNoteIndex = 3; // A is at index 3 in CIRCLE
   let currentIndex = startNoteIndex;
   let visitedPath = [startNoteIndex];
@@ -257,8 +258,14 @@
 
     // Check if we've returned to start
     if (currentIndex === startNoteIndex && visitedPath.length > 1) {
-      stopAnimation();
-      updateButtons();
+      if (looping) {
+        visitedPath = [startNoteIndex];
+        animProgress = 0;
+        updateSequence();
+      } else {
+        stopAnimation();
+        updateButtons();
+      }
       draw();
     }
   }
@@ -340,6 +347,12 @@
   function updateButtons() {
     document.getElementById('playBtn').textContent = isPlaying ? 'Pause' : 'Play';
     document.getElementById('resetBtn').disabled = !isMidRun();
+    var loopBtn = document.getElementById('loopBtn');
+    if (looping) {
+      loopBtn.classList.add('active');
+    } else {
+      loopBtn.classList.remove('active');
+    }
   }
 
   function updateInfo() {
@@ -396,6 +409,10 @@
 
   document.getElementById('playBtn').addEventListener('click', play);
   document.getElementById('resetBtn').addEventListener('click', reset);
+  document.getElementById('loopBtn').addEventListener('click', function () {
+    looping = !looping;
+    updateButtons();
+  });
 
   // ─── BUILD TICK MARKS ───
   function buildTickMarks() {

@@ -201,6 +201,11 @@
   opacity: 0.25;
   cursor: default;
 }
+.cof-buttons .btn-secondary.active {
+  border-color: var(--cof-text) !important;
+  color: var(--cof-text);
+  background: rgba(255, 255, 255, 0.08);
+}
 
 /* ─── SEQUENCE DISPLAY ─── */
 .cof-sequence {
