@@ -42,8 +42,9 @@
 
   // Animation
   let animProgress = 0;
-  let lastStepTime = 0;
+  let stepTimerId = null;
   let animFrameId = null;
+  let stepStartTime = 0;
 
   // ─── AUDIO ───
   function getAudioCtx() {
@@ -218,41 +219,59 @@
     if (currentIndex === startNoteIndex && visitedPath.length > 1) {
       isPlaying = false;
       cancelAnimationFrame(animFrameId);
-      updatePlayButton();
+      updateButtons();
     }
   }
 
   // ─── ANIMATION ───
-  function animate(timestamp) {
-    if (!isPlaying) return;
-
+  function scheduleStep() {
     var beatDuration = 60000 / tempo;
-
-    if (!lastStepTime) lastStepTime = timestamp;
-
-    var elapsed = timestamp - lastStepTime;
-    animProgress = Math.min(elapsed / (beatDuration * 0.75), 1);
-
-    if (elapsed >= beatDuration) {
-      stepForward();
-      lastStepTime = timestamp;
-      animProgress = 0;
-
+    stepStartTime = performance.now();
+    stepTimerId = setTimeout(function () {
       if (!isPlaying) return;
-    }
+      stepForward();
+      if (isPlaying) scheduleStep();
+    }, beatDuration);
+  }
 
+  function drawLoop() {
+    if (!isPlaying) return;
+    var beatDuration = 60000 / tempo;
+    var elapsed = performance.now() - stepStartTime;
+    animProgress = Math.min(elapsed / (beatDuration * 0.75), 1);
     draw();
-    animFrameId = requestAnimationFrame(animate);
+    animFrameId = requestAnimationFrame(drawLoop);
   }
 
   // ─── CONTROLS ───
+  function hasCompleted() {
+    return !isPlaying && visitedPath.length > 1 && currentIndex === startNoteIndex;
+  }
+
+  function isMidRun() {
+    return isPlaying || (visitedPath.length > 1 && currentIndex !== startNoteIndex);
+  }
+
+  function stopAnimation() {
+    isPlaying = false;
+    clearTimeout(stepTimerId);
+    cancelAnimationFrame(animFrameId);
+  }
+
   function play() {
     if (isPlaying) {
-      isPlaying = false;
-      cancelAnimationFrame(animFrameId);
-      updatePlayButton();
+      stopAnimation();
+      updateButtons();
       draw();
       return;
+    }
+
+    // If completed, reset before playing
+    if (hasCompleted()) {
+      currentIndex = startNoteIndex;
+      visitedPath = [startNoteIndex];
+      animProgress = 0;
+      updateSequence();
     }
 
     getAudioCtx();
@@ -262,25 +281,25 @@
     playNote(CIRCLE[currentIndex]);
 
     isPlaying = true;
-    lastStepTime = 0;
     animProgress = 0;
-    updatePlayButton();
-    animFrameId = requestAnimationFrame(animate);
+    updateButtons();
+    scheduleStep();
+    animFrameId = requestAnimationFrame(drawLoop);
   }
 
   function reset() {
-    isPlaying = false;
-    cancelAnimationFrame(animFrameId);
+    stopAnimation();
     currentIndex = startNoteIndex;
     visitedPath = [startNoteIndex];
     animProgress = 0;
-    updatePlayButton();
+    updateButtons();
     updateSequence();
     draw();
   }
 
-  function updatePlayButton() {
+  function updateButtons() {
     document.getElementById('playBtn').textContent = isPlaying ? 'Pause' : 'Play';
+    document.getElementById('resetBtn').disabled = !isMidRun();
   }
 
   function updateInfo() {
@@ -337,6 +356,7 @@
   // ─── INIT ───
   buildStartNoteSelect();
   updateInfo();
+  updateButtons();
   updateSequence();
   draw();
 })();
