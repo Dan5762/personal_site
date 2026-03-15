@@ -112,6 +112,20 @@
       ctx.stroke();
     }
 
+    // Preview line showing the selected interval when idle
+    if (!isPlaying && visitedPath.length === 1) {
+      var previewFrom = notePos(startNoteIndex);
+      var previewTo = notePos((startNoteIndex + stepSize) % 12);
+      ctx.beginPath();
+      ctx.moveTo(previewFrom.x, previewFrom.y);
+      ctx.lineTo(previewTo.x, previewTo.y);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
     // Animated beam
     if (isPlaying && visitedPath.length > 0) {
       var fromIdx = visitedPath[visitedPath.length - 1];
@@ -141,21 +155,25 @@
 
     // Note dots and labels
     var visitedSet = new Set(visitedPath);
+    var previewTarget = (!isPlaying && visitedPath.length === 1) ? (startNoteIndex + stepSize) % 12 : -1;
     for (var n = 0; n < 12; n++) {
       var pos = notePos(n);
       var lpos = labelPos(n);
       var isStart = n === startNoteIndex;
       var isCurrent = n === currentIndex;
       var isVisited = visitedSet.has(n);
+      var isPreview = n === previewTarget;
 
       // Dot
-      var dotR = (isCurrent || isStart) ? DOT_RADIUS + 2 : DOT_RADIUS;
+      var dotR = (isCurrent || isStart || isPreview) ? DOT_RADIUS + 2 : DOT_RADIUS;
       ctx.beginPath();
       ctx.arc(pos.x, pos.y, dotR, 0, Math.PI * 2);
       if (isCurrent) {
         ctx.fillStyle = '#fff';
       } else if (isVisited) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      } else if (isPreview) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
       } else if (isStart) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
       } else {
@@ -172,8 +190,8 @@
       }
 
       // Label
-      ctx.font = (isCurrent || isStart) ? '600 15px Satoshi, sans-serif' : '400 13px Satoshi, sans-serif';
-      ctx.fillStyle = isCurrent ? '#fff' : isVisited ? 'rgba(255, 255, 255, 0.75)' : isStart ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)';
+      ctx.font = (isCurrent || isStart || isPreview) ? '600 15px Satoshi, sans-serif' : '400 13px Satoshi, sans-serif';
+      ctx.fillStyle = isCurrent ? '#fff' : isVisited ? 'rgba(255, 255, 255, 0.75)' : isPreview ? 'rgba(255, 255, 255, 0.5)' : isStart ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(CIRCLE[n], lpos.x, lpos.y);
