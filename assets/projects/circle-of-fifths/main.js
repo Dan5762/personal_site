@@ -235,9 +235,9 @@
 
     // Check if we've returned to start
     if (currentIndex === startNoteIndex && visitedPath.length > 1) {
-      isPlaying = false;
-      cancelAnimationFrame(animFrameId);
+      stopAnimation();
       updateButtons();
+      draw();
     }
   }
 
