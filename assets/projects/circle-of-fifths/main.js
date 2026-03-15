@@ -20,6 +20,21 @@
     10: 'Minor 7th', 11: 'Perfect 4th'
   };
 
+  // Chord intervals in semitones from root
+  const CHORDS = {
+    'none':  [0],
+    'major': [0, 4, 7],
+    'minor': [0, 3, 7],
+    'dom7':  [0, 4, 7, 10],
+    'maj7':  [0, 4, 7, 11],
+    'min7':  [0, 3, 7, 10],
+    'sus4':  [0, 5, 7],
+    'sus2':  [0, 2, 7],
+    'dim':   [0, 3, 6],
+    'aug':   [0, 4, 8],
+    'power': [0, 7]
+  };
+
   // ─── CANVAS SETUP ───
   const canvas = document.getElementById('cofCanvas');
   const ctx = canvas.getContext('2d');
@@ -34,6 +49,8 @@
   // ─── STATE ───
   let stepSize = 7;
   let tempo = 140;
+  let chordType = 'none';
+  let looping = false;
   let startNoteIndex = 3; // A is at index 3 in CIRCLE
   let currentIndex = startNoteIndex;
   let visitedPath = [startNoteIndex];
@@ -42,8 +59,9 @@
 
   // Animation
   let animProgress = 0;
-  let lastStepTime = 0;
+  let stepTimerId = null;
   let animFrameId = null;
+  let stepStartTime = 0;
 
   // ─── AUDIO ───
   function getAudioCtx() {
@@ -55,20 +73,26 @@
     var ctx = getAudioCtx();
     if (ctx.state === 'suspended') ctx.resume();
 
-    var osc = ctx.createOscillator();
-    var gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.frequency.value = FREQ[noteName];
-    osc.type = 'triangle';
-
+    var rootFreq = FREQ[noteName];
+    var intervals = CHORDS[chordType];
+    var volume = intervals.length === 1 ? 0.22 : 0.18 / Math.sqrt(intervals.length);
     var now = ctx.currentTime;
-    gain.gain.setValueAtTime(0.22, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
-    osc.start(now);
-    osc.stop(now + 0.9);
+    for (var i = 0; i < intervals.length; i++) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.frequency.value = rootFreq * Math.pow(2, intervals[i] / 12);
+      osc.type = 'triangle';
+
+      gain.gain.setValueAtTime(volume, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+      osc.start(now);
+      osc.stop(now + 0.9);
+    }
   }
 
   // ─── GEOMETRY ───
@@ -111,6 +135,20 @@
       ctx.stroke();
     }
 
+    // Preview line showing the selected interval when idle
+    if (!isPlaying && visitedPath.length === 1) {
+      var previewFrom = notePos(startNoteIndex);
+      var previewTo = notePos((startNoteIndex + stepSize) % 12);
+      ctx.beginPath();
+      ctx.moveTo(previewFrom.x, previewFrom.y);
+      ctx.lineTo(previewTo.x, previewTo.y);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
     // Animated beam
     if (isPlaying && visitedPath.length > 0) {
       var fromIdx = visitedPath[visitedPath.length - 1];
@@ -140,21 +178,25 @@
 
     // Note dots and labels
     var visitedSet = new Set(visitedPath);
+    var previewTarget = (!isPlaying && visitedPath.length === 1) ? (startNoteIndex + stepSize) % 12 : -1;
     for (var n = 0; n < 12; n++) {
       var pos = notePos(n);
       var lpos = labelPos(n);
       var isStart = n === startNoteIndex;
       var isCurrent = n === currentIndex;
       var isVisited = visitedSet.has(n);
+      var isPreview = n === previewTarget;
 
       // Dot
-      var dotR = (isCurrent || isStart) ? DOT_RADIUS + 2 : DOT_RADIUS;
+      var dotR = (isCurrent || isStart || isPreview) ? DOT_RADIUS + 2 : DOT_RADIUS;
       ctx.beginPath();
       ctx.arc(pos.x, pos.y, dotR, 0, Math.PI * 2);
       if (isCurrent) {
         ctx.fillStyle = '#fff';
       } else if (isVisited) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      } else if (isPreview) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
       } else if (isStart) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
       } else {
@@ -171,8 +213,8 @@
       }
 
       // Label
-      ctx.font = (isCurrent || isStart) ? '600 15px Satoshi, sans-serif' : '400 13px Satoshi, sans-serif';
-      ctx.fillStyle = isCurrent ? '#fff' : isVisited ? 'rgba(255, 255, 255, 0.75)' : isStart ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)';
+      ctx.font = (isCurrent || isStart || isPreview) ? '600 15px Satoshi, sans-serif' : '400 13px Satoshi, sans-serif';
+      ctx.fillStyle = isCurrent ? '#fff' : isVisited ? 'rgba(255, 255, 255, 0.75)' : isPreview ? 'rgba(255, 255, 255, 0.5)' : isStart ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.3)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(CIRCLE[n], lpos.x, lpos.y);
@@ -216,43 +258,67 @@
 
     // Check if we've returned to start
     if (currentIndex === startNoteIndex && visitedPath.length > 1) {
-      isPlaying = false;
-      cancelAnimationFrame(animFrameId);
-      updatePlayButton();
+      if (looping) {
+        visitedPath = [startNoteIndex];
+        animProgress = 0;
+        updateSequence();
+      } else {
+        stopAnimation();
+        updateButtons();
+      }
+      draw();
     }
   }
 
   // ─── ANIMATION ───
-  function animate(timestamp) {
-    if (!isPlaying) return;
-
+  function scheduleStep() {
     var beatDuration = 60000 / tempo;
-
-    if (!lastStepTime) lastStepTime = timestamp;
-
-    var elapsed = timestamp - lastStepTime;
-    animProgress = Math.min(elapsed / (beatDuration * 0.75), 1);
-
-    if (elapsed >= beatDuration) {
-      stepForward();
-      lastStepTime = timestamp;
-      animProgress = 0;
-
+    stepStartTime = performance.now();
+    stepTimerId = setTimeout(function () {
       if (!isPlaying) return;
-    }
+      stepForward();
+      if (isPlaying) scheduleStep();
+    }, beatDuration);
+  }
 
+  function drawLoop() {
+    if (!isPlaying) return;
+    var beatDuration = 60000 / tempo;
+    var elapsed = performance.now() - stepStartTime;
+    animProgress = Math.min(elapsed / (beatDuration * 0.75), 1);
     draw();
-    animFrameId = requestAnimationFrame(animate);
+    animFrameId = requestAnimationFrame(drawLoop);
   }
 
   // ─── CONTROLS ───
+  function hasCompleted() {
+    return !isPlaying && visitedPath.length > 1 && currentIndex === startNoteIndex;
+  }
+
+  function isMidRun() {
+    return isPlaying || (visitedPath.length > 1 && currentIndex !== startNoteIndex);
+  }
+
+  function stopAnimation() {
+    isPlaying = false;
+    clearTimeout(stepTimerId);
+    cancelAnimationFrame(animFrameId);
+  }
+
   function play() {
     if (isPlaying) {
-      isPlaying = false;
-      cancelAnimationFrame(animFrameId);
-      updatePlayButton();
+      stopAnimation();
+      updateButtons();
       draw();
       return;
+    }
+
+    // If completed, reset before playing
+    if (hasCompleted()) {
+      currentIndex = startNoteIndex;
+      visitedPath = [startNoteIndex];
+      animProgress = 0;
+      updateSequence();
     }
 
     getAudioCtx();
@@ -262,25 +328,31 @@
     playNote(CIRCLE[currentIndex]);
 
     isPlaying = true;
-    lastStepTime = 0;
     animProgress = 0;
-    updatePlayButton();
-    animFrameId = requestAnimationFrame(animate);
+    updateButtons();
+    scheduleStep();
+    animFrameId = requestAnimationFrame(drawLoop);
   }
 
   function reset() {
-    isPlaying = false;
-    cancelAnimationFrame(animFrameId);
+    stopAnimation();
     currentIndex = startNoteIndex;
     visitedPath = [startNoteIndex];
     animProgress = 0;
-    updatePlayButton();
+    updateButtons();
     updateSequence();
     draw();
   }
 
-  function updatePlayButton() {
+  function updateButtons() {
     document.getElementById('playBtn').textContent = isPlaying ? 'Pause' : 'Play';
+    document.getElementById('resetBtn').disabled = !isMidRun();
+    var loopBtn = document.getElementById('loopBtn');
+    if (looping) {
+      loopBtn.classList.add('active');
+    } else {
+      loopBtn.classList.remove('active');
+    }
   }
 
   function updateInfo() {
@@ -331,12 +403,36 @@
     updateInfo();
   });
 
+  document.getElementById('chordSelect').addEventListener('change', function () {
+    chordType = this.value;
+  });
+
   document.getElementById('playBtn').addEventListener('click', play);
   document.getElementById('resetBtn').addEventListener('click', reset);
+  document.getElementById('loopBtn').addEventListener('click', function () {
+    looping = !looping;
+    updateButtons();
+  });
+
+  // ─── BUILD TICK MARKS ───
+  function buildTickMarks() {
+    var wrap = document.getElementById('stepSliderWrap');
+    var marks = document.createElement('div');
+    marks.className = 'tick-marks';
+    for (var i = 1; i <= 11; i++) {
+      var tick = document.createElement('div');
+      tick.className = 'tick';
+      tick.style.left = ((i - 1) / 10 * 100) + '%';
+      marks.appendChild(tick);
+    }
+    wrap.appendChild(marks);
+  }
 
   // ─── INIT ───
   buildStartNoteSelect();
+  buildTickMarks();
   updateInfo();
+  updateButtons();
   updateSequence();
   draw();
 })();

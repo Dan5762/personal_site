@@ -50,7 +50,9 @@
       <div class="cof-controls">
         <div class="control-row">
           <span class="control-label">Interval</span>
-          <input type="range" id="stepSlider" min="1" max="11" value="7">
+          <div class="slider-ticks" id="stepSliderWrap">
+            <input type="range" id="stepSlider" min="1" max="11" value="7" step="1">
+          </div>
           <span class="control-value" id="intervalDisplay">Perfect 5th</span>
         </div>
 
@@ -65,6 +67,23 @@
           <select id="startNoteSelect"></select>
         </div>
 
+        <div class="control-row">
+          <span class="control-label">Chord</span>
+          <select id="chordSelect">
+            <option value="none">None (single note)</option>
+            <option value="major">Major</option>
+            <option value="minor">Minor</option>
+            <option value="dom7">Dominant 7th</option>
+            <option value="maj7">Major 7th</option>
+            <option value="min7">Minor 7th</option>
+            <option value="sus4">Sus4</option>
+            <option value="sus2">Sus2</option>
+            <option value="dim">Diminished</option>
+            <option value="aug">Augmented</option>
+            <option value="power">Power (5th)</option>
+          </select>
+        </div>
+
         <div class="cof-info-row">
           <span class="info-item">Bounce angle <strong id="angleDisplay">105°</strong></span>
           <span class="info-item">Notes visited <strong id="notesCountDisplay">12</strong></span>
@@ -74,6 +93,7 @@
         <div class="cof-buttons">
           <button class="btn-primary" id="playBtn">Play</button>
           <button class="btn-secondary" id="resetBtn">Reset</button>
+          <button class="btn-secondary" id="loopBtn">Loop</button>
         </div>
       </div>
 
