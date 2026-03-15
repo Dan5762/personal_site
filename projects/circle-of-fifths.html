@@ -1,0 +1,93 @@
+<!-- Made by Alan Long (https://alanlong.design/) & Daniel Long (INSERT_URL) 2022 s-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Circle of Fifths Oscillator - Daniel Long</title>
+  <meta name="description" content="Explore how a note bounces around the circle of fifths at different angles, creating musical intervals and star polygon patterns.">
+  <meta name="author" content="Daniel Long">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16x16.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <link rel="mask-icon" href="../assets/images/safari-pinned-tab.svg" color="#1A1715">
+  <meta name="msapplication-TileColor" content="#1A1715">
+  <meta name="theme-color" content="#1A1715">
+
+  <meta property="og:title" content="Circle of Fifths Oscillator - Daniel Long">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://daniellong.co">
+  <meta property="og:description" content="Explore how a note bounces around the circle of fifths at different angles, creating musical intervals and star polygon patterns.">
+
+  <link rel="stylesheet" href="../main.css">
+  <link rel="stylesheet" href="circle-of-fifths.css">
+  <script src="../assets/js/cursor-effect.js"></script>
+  <script src="../assets/js/menu.js"></script>
+</head>
+
+<body>
+  <div class="menu" id="menu-container">
+    <!-- Menu will be loaded by JavaScript -->
+  </div>
+  <main>
+    <section>
+      <div>
+        <h1>Circle of Fifths Oscillator</h1>
+      </div>
+      <div class="content">
+        <p>A beam bounces around the circle of fifths at a fixed angle. The angle determines which musical interval it traces and how many notes it visits before returning to the start.</p>
+      </div>
+    </section>
+
+    <section class="cof-app">
+      <div class="cof-canvas-wrap">
+        <canvas id="cofCanvas" width="500" height="500"></canvas>
+      </div>
+
+      <div class="cof-controls">
+        <div class="control-row">
+          <span class="control-label">Interval</span>
+          <input type="range" id="stepSlider" min="1" max="11" value="7">
+          <span class="control-value" id="intervalDisplay">Perfect 5th</span>
+        </div>
+
+        <div class="control-row">
+          <span class="control-label">Tempo</span>
+          <input type="range" id="tempoSlider" min="40" max="300" value="140">
+          <span class="control-value" id="tempoDisplay">140 bpm</span>
+        </div>
+
+        <div class="control-row">
+          <span class="control-label">Start note</span>
+          <select id="startNoteSelect"></select>
+        </div>
+
+        <div class="cof-info-row">
+          <span class="info-item">Bounce angle <strong id="angleDisplay">105°</strong></span>
+          <span class="info-item">Notes visited <strong id="notesCountDisplay">12</strong></span>
+          <span class="info-item">Pattern <strong id="patternDisplay">—</strong></span>
+        </div>
+
+        <div class="cof-buttons">
+          <button class="btn-primary" id="playBtn">Play</button>
+          <button class="btn-secondary" id="resetBtn">Reset</button>
+        </div>
+      </div>
+
+      <div class="cof-sequence" id="sequenceDisplay"></div>
+    </section>
+  </main>
+</body>
+<div class="footer">
+  <div class="footer--icons">
+    <a href="https://github.com/Dan5762" target="_blank"><img src="../assets/images/icons/github.svg" alt="github" width="30" height="30"></a>
+    <a href="https://www.linkedin.com/in/daniel-long-724b21171/" target="_blank"><img src="../assets/images/icons/linkedin.svg" alt="linkedin" width="30" height="30"></a>
+    <a href="https://soundcloud.com/daniel-long-602574572" target="_blank"><img src="../assets/images/icons/soundcloud.svg" alt="soundcloud" width="30" height="30"></a>
+  </div>
+</div>
+
+<script src="../assets/projects/circle-of-fifths/main.js"></script>
+</html>
