@@ -103,21 +103,18 @@
 .slider-ticks .tick-marks {
   position: absolute;
   top: 0;
-  left: 7px;
-  right: 7px;
+  left: 0;
+  right: 0;
   bottom: 0;
-  display: flex;
-  justify-content: space-between;
   pointer-events: none;
 }
 
 .slider-ticks .tick {
   width: 1px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.2);
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
 }
 
 .cof-app select {
