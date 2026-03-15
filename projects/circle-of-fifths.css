@@ -102,10 +102,11 @@
 
 .slider-ticks .tick-marks {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 50%;
+  left: 7px;
+  right: 7px;
+  transform: translateY(-50%);
+  height: 12px;
   pointer-events: none;
 }
 
