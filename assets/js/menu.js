@@ -4,6 +4,7 @@ class MenuComponent {
     this.menuItems = [
       { href: 'index.html', label: 'About' },
       { href: 'projects.html', label: 'Projects' },
+      { href: 'podcasts.html', label: 'Podcasts' },
       { href: 'reading.html', label: 'Reading' },
       { href: 'gallery.html', label: 'Gallery' }
     ];
