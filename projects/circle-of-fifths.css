@@ -1,0 +1,282 @@
+/* ─── CIRCLE OF FIFTHS OSCILLATOR ─── */
+:root {
+  --cof-surface: #1A1715;
+  --cof-surface2: #221E1B;
+  --cof-border: rgba(153, 153, 153, 0.2);
+  --cof-text: #fff;
+  --cof-text-dim: #666;
+  --cof-text-mid: #999;
+}
+
+.cof-app {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ─── CANVAS ─── */
+.cof-canvas-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: calc(var(--unit) * 4);
+}
+
+#cofCanvas {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
+
+/* ─── CONTROLS ─── */
+.cof-controls {
+  background: var(--cof-surface);
+  border: 1px solid var(--cof-border);
+  border-radius: calc(var(--unit) * 0.5);
+  padding: calc(var(--unit) * 3) calc(var(--unit) * 4);
+  margin-bottom: calc(var(--unit) * 3);
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--unit) * 2);
+  margin-bottom: calc(var(--unit) * 2);
+}
+
+.control-label {
+  font-size: calc(var(--unit) * 1.5);
+  color: var(--cof-text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.control-value {
+  font-size: calc(var(--unit) * 1.75);
+  color: var(--cof-text);
+  min-width: 100px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cof-app input[type=range] {
+  -webkit-appearance: none;
+  flex: 1;
+  height: 2px;
+  background: var(--cof-border);
+  border-radius: 1px;
+  outline: none;
+}
+
+.cof-app input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cof-text);
+  cursor: pointer;
+}
+
+.cof-app input[type=range]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cof-text);
+  cursor: pointer;
+  border: none;
+}
+
+/* ─── INTERVAL SLIDER WITH TICKS ─── */
+.slider-ticks {
+  flex: 1;
+  position: relative;
+  padding: 12px 0;
+}
+
+.slider-ticks input[type=range] {
+  width: 100%;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.slider-ticks .tick-marks {
+  position: absolute;
+  top: 50%;
+  left: 7px;
+  right: 7px;
+  transform: translateY(-50%);
+  height: 12px;
+  pointer-events: none;
+}
+
+.slider-ticks .tick {
+  width: 1px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  position: absolute;
+  top: 0;
+}
+
+.cof-app select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--cof-surface2);
+  color: var(--cof-text);
+  border: 1px solid var(--cof-border);
+  border-radius: calc(var(--unit) * 0.5);
+  padding: calc(var(--unit) * 0.75) calc(var(--unit) * 2) calc(var(--unit) * 0.75) calc(var(--unit) * 1.5);
+  font-family: "Satoshi", sans-serif;
+  font-size: calc(var(--unit) * 1.75);
+  cursor: pointer;
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: calc(var(--unit) * 3);
+}
+
+.cof-app select:hover {
+  border-color: var(--cof-text-mid);
+}
+
+/* ─── INFO ROW ─── */
+.cof-info-row {
+  display: flex;
+  gap: calc(var(--unit) * 3);
+  padding: calc(var(--unit) * 2) 0;
+  margin-bottom: calc(var(--unit) * 2);
+  border-top: 1px solid var(--cof-border);
+  border-bottom: 1px solid var(--cof-border);
+}
+
+.info-item {
+  font-size: calc(var(--unit) * 1.375);
+  color: var(--cof-text-dim);
+  letter-spacing: 0.03em;
+}
+
+.info-item strong {
+  color: var(--cof-text);
+  font-weight: 600;
+}
+
+/* ─── BUTTONS ─── */
+.cof-buttons {
+  display: flex;
+  gap: calc(var(--unit) * 1.25);
+}
+
+.cof-buttons button {
+  font-family: "Satoshi", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: calc(var(--unit) * 0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cof-buttons .btn-primary {
+  background: var(--cof-text);
+  color: var(--backgroundColor);
+  font-size: calc(var(--unit) * 1.75);
+  padding: calc(var(--unit) * 1.5) calc(var(--unit) * 4);
+}
+.cof-buttons .btn-primary:hover { background: var(--cof-text-mid); }
+
+.cof-buttons .btn-secondary {
+  background: transparent;
+  color: var(--cof-text-mid);
+  font-size: calc(var(--unit) * 1.5);
+  padding: calc(var(--unit) * 1.5) calc(var(--unit) * 2.5);
+  border: 1px solid var(--cof-border) !important;
+}
+.cof-buttons .btn-secondary:hover:not(:disabled) {
+  border-color: var(--cof-text-mid) !important;
+  color: var(--cof-text);
+}
+.cof-buttons .btn-secondary:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.cof-buttons .btn-secondary.active {
+  border-color: var(--cof-text) !important;
+  color: var(--cof-text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── SEQUENCE DISPLAY ─── */
+.cof-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--unit) * 0.75);
+  min-height: calc(var(--unit) * 4);
+}
+
+.seq-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--unit) * 0.75);
+}
+
+.seq-beam-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.seq-note {
+  font-family: "Satoshi", sans-serif;
+  font-weight: 600;
+  font-size: calc(var(--unit) * 1.75);
+  color: var(--cof-text-mid);
+  background: var(--cof-surface);
+  border: 1px solid var(--cof-border);
+  border-radius: calc(var(--unit) * 0.25);
+  padding: calc(var(--unit) * 0.5) calc(var(--unit) * 1.25);
+  transition: all 0.2s;
+}
+
+.seq-note.active {
+  color: var(--cof-text);
+  border-color: var(--cof-text-mid);
+  background: var(--cof-surface2);
+}
+
+.seq-arrow {
+  color: var(--cof-text-dim);
+  font-size: calc(var(--unit) * 1.5);
+  display: flex;
+  align-items: center;
+}
+
+/* ─── RESPONSIVE ─── */
+@media screen and (max-width: 600px) {
+  .cof-controls {
+    padding: calc(var(--unit) * 2.5) calc(var(--unit) * 2.5);
+  }
+
+  .control-row {
+    flex-wrap: wrap;
+    gap: calc(var(--unit) * 1);
+  }
+
+  .control-label {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .control-value {
+    text-align: left;
+    min-width: auto;
+  }
+
+  .cof-info-row {
+    flex-wrap: wrap;
+    gap: calc(var(--unit) * 1.5);
+  }
+}
