@@ -683,6 +683,12 @@ select {
   flex-wrap: wrap;
 }
 
+.podcast-subscribe-section {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--unit) * 2);
+}
+
 .episode-list {
   display: flex;
   flex-direction: column;
