@@ -1,0 +1,341 @@
+/* ─── CHORD DETECTOR ─── */
+
+/* ─── APP CONTAINER ─── */
+
+.cd-app {
+  width: 100%;
+  max-width: 680px;
+  padding: calc(var(--unit) * 4) calc(var(--unit) * 3);
+  --unit: 8px;
+  --surface: #1A1715;
+  --surface2: #221E1B;
+  --bg: #0F0D0B;
+  --border: rgba(153, 153, 153, 0.2);
+  --accent: #999;
+  --accent-dim: #555;
+  --text: #fff;
+  --text-dim: #666;
+  --text-mid: #999;
+}
+
+/* ─── HEADER ─── */
+
+.section-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: calc(var(--unit) * 3);
+}
+
+.section-index {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: calc(var(--unit) * 1.25);
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.section-duration {
+  font-size: calc(var(--unit) * 1.25);
+  letter-spacing: 0.2em;
+  color: var(--text-mid);
+  text-transform: uppercase;
+}
+
+/* ─── CHORD DISPLAY ─── */
+
+.chord-block {
+  text-align: center;
+  margin-bottom: calc(var(--unit) * 4);
+}
+
+.chord-name {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: calc(var(--unit) * 8);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  line-height: 1;
+  margin-bottom: calc(var(--unit) * 0.5);
+  transition: color 0.15s;
+}
+
+.chord-name.has-chord {
+  color: var(--text);
+}
+
+.chord-subtitle {
+  font-size: calc(var(--unit) * 1.75);
+  color: var(--text-mid);
+  letter-spacing: 0.03em;
+}
+
+/* ─── NOTE GRID ─── */
+
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: calc(var(--unit) * 0.5);
+  margin-bottom: calc(var(--unit) * 4);
+}
+
+.note-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--unit) * 1);
+}
+
+/* Beat-dot style note indicators */
+.note-dot {
+  width: calc(var(--unit) * 4.5);
+  height: calc(var(--unit) * 4.5);
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--unit) * 1.25);
+  color: var(--text-dim);
+  transition: all 0.1s;
+  user-select: none;
+}
+
+.note-dot.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* Vertical energy bars */
+.energy-bar-wrap {
+  width: 4px;
+  height: calc(var(--unit) * 8);
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.energy-bar {
+  width: 100%;
+  height: 0%;
+  background: var(--text);
+  border-radius: 2px;
+  transition: height 0.05s linear;
+}
+
+/* Input level meter */
+.input-level-wrap {
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: calc(var(--unit) * 3);
+}
+
+.input-level {
+  width: 0%;
+  height: 100%;
+  background: var(--text);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+/* ─── CONTROLS ─── */
+
+.controls {
+  display: flex;
+  gap: calc(var(--unit) * 1.25);
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: calc(var(--unit) * 4);
+}
+
+.cd-app .btn-primary {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: calc(var(--unit) * 1.75);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  border-radius: calc(var(--unit) * 0.5);
+  padding: calc(var(--unit) * 1.5) calc(var(--unit) * 4);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.cd-app .btn-primary:hover {
+  background: var(--text-mid);
+}
+
+.cd-app .btn-primary.is-running {
+  background: transparent;
+  color: var(--text-mid);
+  border: 1px solid var(--border);
+}
+
+.cd-app .btn-primary.is-running:hover {
+  border-color: var(--text-mid);
+  color: var(--text);
+}
+
+/* Device selector */
+.device-select {
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: calc(var(--unit) * 1.5);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--unit) * 0.5);
+  padding: calc(var(--unit) * 1.25) calc(var(--unit) * 4) calc(var(--unit) * 1.25) calc(var(--unit) * 1.5);
+  width: 100%;
+  min-height: 44px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right calc(var(--unit) * 1.5) center;
+}
+
+.device-select:hover,
+.device-select:focus {
+  border-color: var(--text-mid);
+}
+
+.device-select option {
+  background: var(--surface2);
+  color: var(--text);
+  padding: calc(var(--unit) * 1);
+}
+
+/* ─── SLIDER PANEL ─── */
+
+.slider-panel {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--unit) * 0.5);
+  padding: calc(var(--unit) * 2.5);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--unit) * 2);
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--unit) * 0.75);
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slider-label {
+  font-size: calc(var(--unit) * 1.25);
+  letter-spacing: 0.25em;
+  color: var(--text-mid);
+  text-transform: uppercase;
+}
+
+.slider-value {
+  font-size: calc(var(--unit) * 1.75);
+  color: var(--text);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Range input -- matches bass-practice slider style */
+.cd-app input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px; /* touch-friendly hit area */
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+.cd-app input[type=range]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+}
+
+.cd-app input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+  cursor: pointer;
+  margin-top: -6px;
+}
+
+.cd-app input[type=range]::-moz-range-track {
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  border: none;
+}
+
+.cd-app input[type=range]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+  border: none;
+  cursor: pointer;
+}
+
+/* ─── RESPONSIVE ─── */
+
+@media screen and (max-width: 600px) {
+  .cd-app {
+    padding: calc(var(--unit) * 3) calc(var(--unit) * 2);
+  }
+
+  .chord-name {
+    font-size: calc(var(--unit) * 6);
+  }
+
+  .note-dot {
+    width: 100%;
+    max-width: calc(var(--unit) * 3.5);
+    aspect-ratio: 1;
+    height: auto;
+    font-size: calc(var(--unit) * 1.1);
+  }
+
+  .note-grid {
+    gap: 2px;
+  }
+}
+
+@media screen and (min-width: 601px) {
+  .note-dot {
+    width: calc(var(--unit) * 5);
+    height: calc(var(--unit) * 5);
+    font-size: calc(var(--unit) * 1.5);
+  }
+
+  .note-grid {
+    gap: calc(var(--unit) * 1);
+  }
+}
